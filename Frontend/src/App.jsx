@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import CreateNote from './pages/CreateNote'
 import AllNotes from './pages/AllNotes'
 import SignUp from './pages/SignUp'
+import Footer from './components/footer'
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path='/new-note' element={<CreateNote/>}/>
         <Route path='/signup' element={<SignUp/>}/>
       </Routes>
+      <Footer/>
     </div>
 
   )
