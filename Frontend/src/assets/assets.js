@@ -1,6 +1,6 @@
 import
 {NotebookText, Search, Tags, Cone, ArrowRight, Menu, X,
-PenLine, BookMarked, Trash2 } from 'lucide-react'
+PenLine, BookMarked, Trash2, Eye } from 'lucide-react'
 export const CardFeatures = [
     {
         'id' : "Card 1",
@@ -32,5 +32,93 @@ import notePadpicture from './notePadpicture.jpg'
 import bannerimage from './bannerimage.jpg'
 export const assets = {
     notePadpicture,
-    bannerimage
+    bannerimage,
+    Eye
 }
+
+export const dummyNotes = [
+    {
+        'id' : "note-1",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'   
+    },
+    {
+        'id' : "note-2",
+         'category': "Personal",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-3",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-4",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-5",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-6",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-7",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-8",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-9",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-10",
+         'category': "Work",
+         'title': 'Monday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-11",
+         'category': "Gaming",
+         'title': 'Gaming Competition',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    },
+    {
+        'id' : "note-12",
+         'category': "Daily Routine",
+         'title': 'Sunday-Schedule',
+         'content': 'I will go office and attend the meeting and then start my task.',
+         'DateofCreation': '01-02-2026'
+    }
+]
