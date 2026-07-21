@@ -13,11 +13,35 @@ const Categories = [
 ] 
 const navigate = useNavigate()
 const {dummyNotes} = useContext(AppContext);
+
+const [selectedCategorie, setselectedCategorie] = useState("All Notes") 
+const [selectedNotes, setselectedNotes] = useState([])
+const filteredNotes = () => {
+  if (selectedCategorie === "All Notes") {
+    setselectedNotes(dummyNotes)
+  }
+  else if (selectedCategorie === "Others") {
+    
+     setselectedNotes(dummyNotes.filter(
+       (dummyNote) => Categories.includes(dummyNote.category) === false));
+   
+        console.log(selectedNotes);
   
+   }
+  else{
+    setselectedNotes(dummyNotes.filter(
+    (dummyNote) => dummyNote.category === selectedCategorie));
+  }
+};
+
+useEffect(()=>{
+  filteredNotes()
+},[dummyNotes, selectedCategorie])
+
 return (
     <section className='mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8'>
       <div className='mb-8'>
-      <span className='inline-flex rounded-full bg-stone-50 px-4 py-2 text-sm font-semibold text-emerald-500'>Find Your Notes</span>
+      <span className='inline-flex rounded-full bg-stone-200 px-4 py-2 text-sm font-semibold text-emerald-500'>Find Your Notes</span>
       <h1 className='mt-3 text-3xl font-bold tracking-tight text-emerald-900 sm:text-4xl'>Your All Notes Available</h1>
       <p className='mt-3 text-sm leading-6 text-emerald-900 sm:text-base'>Select a note which you want to review</p>
       </div>
@@ -29,8 +53,12 @@ return (
            
            <div className='mt-4 flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible'>
               {Categories.map((categorie)=>(
-                <button 
-                className="whitespace-nowrap rounded-xl px-4 py-3 text-left text-sm font-medium transition bg-stone-50 text-emerald-900 hover:bg-stone-300 hover:text-emerald-600"
+                <button onClick={()=>setselectedCategorie(categorie)}
+                className={`whitespace-nowrap rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
+                  selectedCategorie === categorie
+                  ? "bg-stone-300 text-stone-700 shadow-md shadow-stone-400"
+                  : "bg-stone-50 text-emerald-900 hover:bg-stone-300 hover:text-emerald-600"
+                }`}
                 >{categorie}</button>
               ))}
            </div>
@@ -39,12 +67,12 @@ return (
 
       <div className='min-w-0 flex-1'>
         <div className='mb-5 flex items-center justify-between'>
-           <h2 className='text-lg font-semibold text-emerald-800'>selectedCategorie</h2> 
+           <h2 className='text-lg font-semibold text-emerald-800'>{selectedCategorie}</h2> 
 
         </div>
-       
+       {selectedNotes.length > 0 ?
       <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4'>
-        {dummyNotes.map((item)=>(
+        {selectedNotes.map((item)=>(
           <div key={item.id} className='group flex flex-col overflow-hidden rounded-2xl border border-stone-300 bg-white text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg hover:shadow-stone-300'>
             <div className='h-1.5 w-full bg-emerald-500/80'/>
             <div className='flex flex-1 flex-col p-4 sm:p-5'>
@@ -60,7 +88,13 @@ return (
           </div>
           ))}
           </div>
-         
+         :
+        <div className='rounded-2xl border border-dashed border-stone-200 bg-stone-50/50 px-6 py-12 text-center'>
+          <p className='text-sm font-medium text-emerald-800'>No Notes found for this category</p>
+          <button onClick={()=>setselectedCategorie("All Notes")}
+          className='mt-4 rounded-full bg-stone-200 px-5 py-2.5 text-sm font-semibold text-emerald-500 transition hover:bg-stone-600'>View All Notes</button>
+        </div>
+        }
 
         
       </div>
