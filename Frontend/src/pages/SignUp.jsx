@@ -3,10 +3,7 @@ import React, { useState } from 'react'
 const SignUp = () => {
   const [State, setState] = useState("SignUp");
   const [Name, setName]= useState("");
-  console.log(Name);
-  
   const [Email, setEmail] = useState("");
-  console.log(Email);
   const [Password, setPassword] = useState("");
 
   const formHandler = async (event) => {

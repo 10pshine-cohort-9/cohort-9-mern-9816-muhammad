@@ -6,6 +6,7 @@ import CreateNote from './pages/CreateNote'
 import AllNotes from './pages/AllNotes'
 import SignUp from './pages/SignUp'
 import Footer from './components/footer'
+import NoteView from './pages/NoteView'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/all-notes' element={<AllNotes/>}/>
+        <Route path='/NoteView/:id' element={<NoteView/>}/>
         <Route path='/new-note' element={<CreateNote/>}/>
         <Route path='/signup' element={<SignUp/>}/>
       </Routes>
