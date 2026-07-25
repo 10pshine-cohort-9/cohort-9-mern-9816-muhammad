@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
-
+import React, { useContext, useEffect, useState, } from 'react'
+import {useParams} from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 const NoteView = () => {
-  const [userData, setuserData] = useState({
-    Category: "Grocery",
-    Title: "today-grocery",
-    Content: "This is a list of today grocery items.",
-    DateofCreation: "23-05-2026"
-  })
+  const {id} = useParams();
+  const [noteData, setnoteData] = useState({})
+  const {dummyNotes} = useContext(AppContext);
+  
   const [isEdit, setisEdit] = useState(false)
-    return (
-    <section className="min-h-screen bg-stone-50 px-4 py-10 sm:px-6 lg:px-8">
+    
+  const getNote =  () => {
+   setnoteData(dummyNotes.find((dummyNote) => dummyNote.id === id))
+  }
+  useEffect(()=>{
+   getNote();
+ },[dummyNotes, id])
+  
+ return (
+     
+      <section className="min-h-screen bg-stone-50 px-4 py-10 sm:px-6 lg:px-8">
       <div className='mx-auto max-w-2xl'>
              <div className='mb-6 sm:mb-8'>
                 <h1 className='text-2xl sm:text-3xl font-bold text-stone-800 tracking-tight'>My Note</h1>
@@ -19,43 +27,43 @@ const NoteView = () => {
 
         <div className='flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 pb-4'>
             {isEdit === false ?( 
-             <p className="text-xs text-stone-500">Created On: {userData.DateofCreation}</p>)
-            : (<input type="text" value={userData.DateofCreation} 
-               onChange={(event) => setuserData((prev) => ({
-               ...prev,
-               DateofCreation: event.target.value
+             <p className="text-xs text-stone-500">Created On: {noteData.DateofCreation}</p>)
+            : (<input type="text" value={noteData.DateofCreation} 
+               onChange={(event) => setnoteData((prev) => ({
+                 ...prev,
+                 DateofCreation: event.target.value
               }))}
               className="rounded-md border border-stone-300 bg-stone-50 px-2.5 py-1 text-xs text-stone-600 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
               />
             )}
             <span className='inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs text-emerald-700 font-semibold'>
-            {userData.Category}</span>    
+            {noteData.category}</span>    
         </div>
 
             <div className='mt-5'>
              {isEdit ? (
-              <input type="text" value={userData.Title} 
-               onChange={(event) => setuserData((prev)=> ({
+              <input type="text" value={noteData.title} 
+               onChange={(event) => setnoteData((prev)=> ({
                ...prev,
-               Title: event.target.value
+               title: event.target.value
                }))}
               className="w-full rounded-lg border-stone-300 bg-stone-50 px-3.5 py-2.5 text-lg font-semibold text-stone-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30 "/>
-              ):
-              (
-              <h2 className='text-xl font-semibold sm:text-2xl text-emerald-900'>Title: {userData.Title}</h2>    
+            ):
+            (
+              <h2 className='text-xl font-semibold sm:text-2xl text-emerald-900'>Title: {noteData.title}</h2>    
               )}
             </div>
 
             <div className='mt-4'>
             {isEdit ? (
-             <textarea rows={8} value={userData.Content} onChange={(event)=>setuserData((prev)=>({
+             <textarea rows={8} value={noteData.content} onChange={(event)=>setnoteData((prev)=>({
               ...prev,
-              Content: event.target.value
+              content: event.target.value
               }))}
-            className="w-full resize-none rounded-xl border border-stone-300 bg-stone-50 px-3.5 py-2.5 text-sm text-stone-800 leading-relaxed outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30">
+              className="w-full resize-none rounded-xl border border-stone-300 bg-stone-50 px-3.5 py-2.5 text-sm text-stone-800 leading-relaxed outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30">
               </textarea>
             ): 
-            <p className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-stone-600">Content: {userData.Content}</p>
+            <p className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-stone-600">Content: {noteData.content}</p>
             }
             </div>
 
@@ -73,11 +81,12 @@ const NoteView = () => {
                )}
             </div>
 
-
-                    
+            
+            
             </div>
       </div>
     </section>
+  
   )
 }
 
