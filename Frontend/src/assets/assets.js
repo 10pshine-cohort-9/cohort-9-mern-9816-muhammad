@@ -1,6 +1,6 @@
 import
 {NotebookText, Search, Tags, Cone, ArrowRight, Menu, X,
-PenLine, BookMarked, Trash2, Eye } from 'lucide-react'
+PenLine, BookMarked, Trash2, Eye, ChevronDown, ImageUp} from 'lucide-react' 
 export const CardFeatures = [
     {
         'id' : "Card 1",
@@ -33,7 +33,9 @@ import bannerimage from './bannerimage.jpg'
 export const assets = {
     notePadpicture,
     bannerimage,
-    Eye
+    Eye,
+    ChevronDown,
+    ImageUp
 }
 
 export const dummyNotes = [
@@ -122,3 +124,17 @@ export const dummyNotes = [
          'DateofCreation': '01-02-2026'
     }
 ]
+
+import party_pic from './party_pic.jpeg'
+export const userProfile = {
+    'image': party_pic,
+     'Name': 'Muhammad Touqeer Ahmad',
+     'Email': 'muhammadtouqeerahmad040@gmail.com',
+     'Gender': 'Male',
+     'Dob': '01-02-2006',
+      'Tel': '0305-8789930',
+      'Address': {
+        'house': "Janjua House Garjakh",
+        'CityState': 'Gujranwala, Pakistan'
+      }
+}
