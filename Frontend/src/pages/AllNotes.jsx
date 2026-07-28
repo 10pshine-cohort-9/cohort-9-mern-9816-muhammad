@@ -25,9 +25,6 @@ const filteredNotes = () => {
     
      setselectedNotes(dummyNotes.filter(
        (dummyNote) => Categories.includes(dummyNote.category) === false));
-   
-        console.log(selectedNotes);
-  
    }
   else{
     setselectedNotes(dummyNotes.filter(
@@ -54,7 +51,7 @@ return (
            
            <div className='mt-4 flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible'>
               {Categories.map((categorie)=>(
-                <button onClick={()=>setselectedCategorie(categorie)}
+                <button key={categorie} onClick={()=>setselectedCategorie(categorie)}
                 className={`whitespace-nowrap rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
                   selectedCategorie === categorie
                   ? "bg-stone-300 text-stone-700 shadow-md shadow-stone-400"

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
 const Headersection = () => {
 const [isLogin, setisLogin] = useState(true)  
@@ -11,19 +12,19 @@ const [isLogin, setisLogin] = useState(true)
       <span className="text-emerald-700">NOTESBOOK</span>
     </h1>
     {isLogin === false ?
-      <a
-    href="/signup"
+      <Link
+    to="/signup"
     className="inline-flex w-full sm:w-auto items-center justify-center mt-4 gap-2 rounded-full bg-stone-400 text-emerald-950 px-6 py-3.5 text-sm font-semibold shadow-lg transition hover:translate-y-0.5 hover:bg-stone-300 hover:shadow-xl"
     >
       Create Account <span aria-hidden="true">→</span>
-    </a>  
+    </Link>  
     :
-    <a
-    href="/new-note"
+    <Link
+    to="/new-note"
     className="inline-flex w-full sm:w-auto items-center justify-center mt-4 gap-2 rounded-full bg-stone-400 text-emerald-950 px-6 py-3.5 text-sm font-semibold shadow-lg transition hover:translate-y-0.5 hover:bg-stone-300 hover:shadow-xl"
     >
       Create note now <span aria-hidden="true">→</span>
-    </a>
+    </Link>
     }
   </div>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
 const Banner = () => {
   const [isLogin, setisLogin] = useState(true)
@@ -23,21 +24,21 @@ const Banner = () => {
       Organize your thoughts, study notes, meeting minutes, and daily ideas in
       one beautiful and secure place. Access your notes whenever you need them.
     </p>
-
+   
     {/* Button */}
     <div className="mt-4 flex flex-col justify-center gap-4 sm:flex-row">
       {isLogin === false ?
-    <a href="/signup"
+    <Link to="/signup"
         className="group inline-flex items-center justify-center gap-2 rounded-xl bg-stone-400 text-emerald-950 hover:bg-stone-300 px-7 py-3 font-semibold shadow-lg transition-all duration-300 hover:translate-y-1 hover:shadow-2xl">
         Create Account
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </a>
+    </Link>
        :
-       <a href="/all-notes"
+       <Link to="/all-notes"
         className="group inline-flex items-center justify-center gap-2 rounded-xl bg-stone-400 text-emerald-950 hover:bg-stone-300 px-7 py-3 font-semibold shadow-lg transition-all duration-300 hover:translate-y-1 hover:shadow-2xl">
         Explore Notes
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </a> 
+      </Link> 
     }
       
     </div>

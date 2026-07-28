@@ -125,16 +125,16 @@ export const dummyNotes = [
     }
 ]
 
-import party_pic from './party_pic.jpeg'
+import profile_pic from './profile_pic.png'
 export const userProfile = {
-    'image': party_pic,
-     'Name': 'Muhammad Touqeer Ahmad',
-     'Email': 'muhammadtouqeerahmad040@gmail.com',
+    'image': profile_pic,
+     'Name': 'Abc',
+     'Email': 'abc@gmail.com',
      'Gender': 'Male',
-     'Dob': '01-02-2006',
-      'Tel': '0305-8789930',
+     'Dob': '00-00-2006',
+      'Tel': '03**-*******',
       'Address': {
-        'house': "Janjua House Garjakh",
-        'CityState': 'Gujranwala, Pakistan'
+        'house': "xyz",
+        'CityState': 'City, Country'
       }
 }
