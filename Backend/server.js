@@ -5,8 +5,21 @@ import logger from './logger/logger.js'
 import ConnectDb from './config/MongoDb.js'
 import connectCloudinary from './config/Cloudinary.js'
 
-ConnectDb();
 connectCloudinary();
+
+const serverStarter = async () => {
+    try {
+        await ConnectDb();
+        app.listen(port, () => {
+        logger.info(`server has started on port ${port}` )
+})
+        
+    } 
+    catch (error) {
+        logger.error(error, "Application failed to start")
+        process.exit(1);
+    }
+};
 
 const app = express()
 const port = process.env.PORT;
@@ -18,6 +31,4 @@ app.get('/', (req, res) => {
     res.send("Api working")
 })
 
-app.listen(port, () => {
-   logger.info(`server has started on port ${port}` )
-})
+serverStarter();
