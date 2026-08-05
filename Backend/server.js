@@ -4,6 +4,7 @@ import 'dotenv/config'
 import logger from './logger/logger.js'
 import ConnectDb from './config/MongoDb.js'
 import connectCloudinary from './config/Cloudinary.js'
+import Notesroute from './routes/NotesRoutes.js'
 
 connectCloudinary();
 
@@ -26,6 +27,8 @@ const port = process.env.PORT;
 
 app.use(express.json())
 app.use(cors())
+app.use('/api', Notesroute )
+
 
 app.get('/', (req, res) => {
     res.send("Api working")
