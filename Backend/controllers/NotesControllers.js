@@ -53,7 +53,7 @@ const editNote = async (req, res) => {
     const { title, content } = req.body;
 
     try {
-        const editedNote = await Note.findByIdAndUpdate(id, {Title: title, Content: content}, {returnDocument: 'after', runValidators: true});
+        const editedNote = await Note.findByIdAndUpdate(id, {UserId: req.user.id, Title: title, Content: content}, {returnDocument: 'after', runValidators: true});
         if (!editedNote) {
             res.status(404).send("Edited note not found or invalid ID")
         } else {
