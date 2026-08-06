@@ -3,15 +3,18 @@ import mongoose from 'mongoose';
 const NoteSchema = new mongoose.Schema({
     Category: {
         type: String,
-        required: true
+        required: true,
+        minLength: 5
     },
     Title: {
         type: String,
-        required: true
+        required: true,
+        minLength: 5
     },
     Content:{
         type: String,
-        required: true
+        required: true,
+        minLength: 20
     }
 })
 

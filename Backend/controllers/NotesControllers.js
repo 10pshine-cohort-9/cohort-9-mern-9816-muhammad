@@ -15,21 +15,37 @@ const CreateNote = async (req, res) => {
     res.json(AddNote)
 } catch (error) {
     logger.error(error)
-    res.send("Error creating note", error)
+    res.json({success: false, message: "Error while creating the note"})
 }
 }
 
 const GetAllNotes = async (req, res) => {
+    try {
     const notes =  await Note.find();
     res.json(notes);
-    logger.info("All notes are here")
+    logger.info("All notes are here")     
+    } catch (error) {
+        logger.error(error)
+    }
+   
 }
 
 
 const findNote = async (req, res) => {
     const { id } = req.params;
-    const findedNote = await Note.findById(id);
-    res.send(findedNote)
+    try {
+        const findedNote = await Note.findById(id);
+        if (!findedNote) {
+            res.send(404);
+        }
+        else{
+            res.send(findedNote)
+        }
+    } catch (error) {
+        logger.error(error)
+        res.status(500).send("Note finding failed")
+    }
+    
 }
 
 const editNote = async (req, res) => {
@@ -37,9 +53,13 @@ const editNote = async (req, res) => {
     const { title, content } = req.body;
 
     try {
-        const editedNote = await Note.findByIdAndUpdate(id, {Title: title, Content: content})
-        logger.info(`The Note with id ${id} edited successfully`)
-        res.send(editedNote)
+        const editedNote = await Note.findByIdAndUpdate(id, {Title: title, Content: content}, {returnDocument: 'after', runValidators: true});
+        if (!editedNote) {
+            res.status(404).send("Edited note not found or invalid ID")
+        } else {
+            logger.info(`The Note with id ${id} edited successfully`)
+            res.send(editedNote)
+        }
     } catch (error) {
         logger.error(error)
     }
@@ -50,9 +70,15 @@ const deleteNote = async (req, res) => {
 
     try {
         const deletedNote = await Note.findByIdAndDelete(id);
-        logger.info(`Note with this ID ${id} deleted successfully`);
-        res.json(deletedNote);
+        if(!deletedNote){
+            res.status(404).send("Note not found")
+        }
+        else{
+            logger.info(`Note with this ID ${id} deleted successfully`);
+            res.json(deletedNote);
 
+        }
+        
  } catch (error) {
         logger.error(error)
         res.status(500).send("Error while deleting the note");
