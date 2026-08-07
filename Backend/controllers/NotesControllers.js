@@ -3,13 +3,14 @@ import logger from "../logger/logger.js";
 
 const CreateNote = async (req, res) => {
     try {
-    const { category, title, content } = req.body;
-    const newNote = {category, title, content}
-    const AddNote = new Note({
-        Category: newNote.category,
-        Title: newNote.title,
-        Content: newNote.content
-    });
+    const { Category, Title, Content } = req.body;
+    const newNote = {Category, Title, Content}
+    // const AddNote = new Note({
+    //     Category: newNote.category,
+    //     Title: newNote.title,
+    //     Content: newNote.content
+    // });
+    const AddNote = new Note(newNote)
     await AddNote.save();
     logger.info("New Note Created Successfully")
     res.json(AddNote)
@@ -53,7 +54,7 @@ const editNote = async (req, res) => {
     const { title, content } = req.body;
 
     try {
-        const editedNote = await Note.findByIdAndUpdate(id, {UserId: req.user.id, Title: title, Content: content}, {returnDocument: 'after', runValidators: true});
+         const editedNote = await Note.findByIdAndUpdate(id, { Title: title, Content: content}, {returnDocument: 'after', runValidators: true});
         if (!editedNote) {
             res.status(404).send("Edited note not found or invalid ID")
         } else {

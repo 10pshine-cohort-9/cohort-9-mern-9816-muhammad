@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const NoteSchema = new mongoose.Schema({
-    UserId:{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'UserProfile'
-    },
+    // UserId:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: true,
+    //     ref: 'UserProfile'
+    // },
     Category: {
         type: String,
         required: true,

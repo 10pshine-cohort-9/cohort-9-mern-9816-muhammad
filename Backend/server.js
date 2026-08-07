@@ -24,14 +24,21 @@ const serverStarter = async () => {
 
 const app = express()
 const port = process.env.PORT;
-
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+}))
+
 app.use('/api', Notesroute )
 
 
 app.get('/', (req, res) => {
     res.send("Api working")
+})
+app.post('/', (req, res) => {
+    const { data } = req.body
+    console.log(data);
+    
 })
 
 serverStarter();
