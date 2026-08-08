@@ -4,9 +4,11 @@ import { createContext } from 'react'
 import { RouterContextProvider } from 'react-router-dom'
 
 export const AppContext = createContext();
+const BACKEND_URL = 'http://localhost:4000/api'
+
 const AppContextProvider = (props) => {
     const value ={
-        dummyNotes
+        BACKEND_URL
     }
   
     return (

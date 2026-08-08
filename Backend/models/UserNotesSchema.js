@@ -16,6 +16,10 @@ const NoteSchema = new mongoose.Schema({
         required: true,
         minLength: 5
     },
+    dateOfCreation: {
+        type: String,
+        required: true
+    },
     Content:{
         type: String,
         required: true,
