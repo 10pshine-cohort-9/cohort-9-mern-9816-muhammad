@@ -2,9 +2,10 @@ import React from 'react'
 import { dummyNotes } from '../assets/assets'
 import { createContext } from 'react'
 import { RouterContextProvider } from 'react-router-dom'
+ 
 
 export const AppContext = createContext();
-const BACKEND_URL = 'http://localhost:4000/api'
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL
 
 const AppContextProvider = (props) => {
     const value ={

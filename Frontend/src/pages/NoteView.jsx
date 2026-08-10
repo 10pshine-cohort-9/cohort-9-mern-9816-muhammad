@@ -22,6 +22,16 @@ const NoteView = () => {
     }
   };
 
+  const editNote = async () => {
+    if(isEdit === true){
+    try {
+      axios.put(BACKEND_URL + `/edit-note/${id}`, noteData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  }
+
   const deleteNote = () => {
     if (Delete === true) {
       try {
@@ -118,7 +128,7 @@ const NoteView = () => {
           <div className="mt-6 flex flex-col-reverse gap-3 border-t border-stone-200 pt-5 sm:flex-row sm:justify-end">
             {isEdit ? (
               <button
-                onClick={() => setisEdit(false)}
+                onClick={() => {setisEdit(false), editNote()}}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
               >
                 Save

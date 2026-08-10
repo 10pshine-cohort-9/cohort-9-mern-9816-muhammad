@@ -118,12 +118,12 @@ const AllNotes = () => {
                     <p className="mt-1.5 py-3 px-0.5 flex-1 text-xl font-semibold bg-slate-100 border border-emerald-300 rounded-lg text-center text-stone-600">
                       Content
                     </p>
-                    <a
+                    <button
                       onClick={() => navigate(`/NoteView/${item._id}`)}
                       className="mt-4 inline-flex items-center gap-1.5 self-start text-xs font-semibold text-emerald-700 transition group-hover:gap-2.5 group-hover:text-emerald-800 cursor-pointer"
                     >
                       View Note <assets.Eye className="h-3.5 w-3.5" />
-                    </a>
+                    </button>
                   </div>
                 </div>
               ))}

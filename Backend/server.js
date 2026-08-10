@@ -35,10 +35,6 @@ app.use('/api', Notesroute )
 app.get('/', (req, res) => {
     res.send("Api working")
 })
-app.post('/', (req, res) => {
-    const { data } = req.body
-    console.log(data);
-    
-})
+
 
 serverStarter();
