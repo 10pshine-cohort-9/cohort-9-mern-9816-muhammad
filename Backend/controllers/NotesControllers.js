@@ -3,13 +3,9 @@ import logger from "../logger/logger.js";
 
 const CreateNote = async (req, res) => {
     try {
-    const { category, title, content } = req.body;
-    const newNote = {category, title, content}
-    const AddNote = new Note({
-        Category: newNote.category,
-        Title: newNote.title,
-        Content: newNote.content
-    });
+    const { Category, Title, dateOfCreation, Content } = req.body;
+    const newNote = {Category, Title, dateOfCreation, Content}
+    const AddNote = new Note(newNote)
     await AddNote.save();
     logger.info("New Note Created Successfully")
     res.json(AddNote)
@@ -26,6 +22,7 @@ const GetAllNotes = async (req, res) => {
     logger.info("All notes are here")     
     } catch (error) {
         logger.error(error)
+        res.json({success: false, message: "Error while getting the notes"})
     }
    
 }
@@ -36,10 +33,11 @@ const findNote = async (req, res) => {
     try {
         const findedNote = await Note.findById(id);
         if (!findedNote) {
-            res.send(404);
+            res.sendStatus(404);
         }
         else{
             res.send(findedNote)
+            logger.info("The selected Note is ready to View")
         }
     } catch (error) {
         logger.error(error)
@@ -50,10 +48,10 @@ const findNote = async (req, res) => {
 
 const editNote = async (req, res) => {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const { Title, dateOfCreation, Content } = req.body;
 
     try {
-        const editedNote = await Note.findByIdAndUpdate(id, {UserId: req.user.id, Title: title, Content: content}, {returnDocument: 'after', runValidators: true});
+         const editedNote = await Note.findByIdAndUpdate(id, { Title: Title, dateOfCreation: dateOfCreation, Content: Content}, {returnDocument: 'after', runValidators: true});
         if (!editedNote) {
             res.status(404).send("Edited note not found or invalid ID")
         } else {
@@ -62,6 +60,7 @@ const editNote = async (req, res) => {
         }
     } catch (error) {
         logger.error(error)
+        res.json({success: false, message: "Error while editing the note"})
     }
 }
 

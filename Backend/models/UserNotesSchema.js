@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const NoteSchema = new mongoose.Schema({
-    UserId:{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'UserProfile'
-    },
+    // UserId:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: true,
+    //     ref: 'UserProfile'
+    // },
     Category: {
         type: String,
         required: true,
@@ -15,6 +15,10 @@ const NoteSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 5
+    },
+    dateOfCreation: {
+        type: String,
+        required: true
     },
     Content:{
         type: String,
