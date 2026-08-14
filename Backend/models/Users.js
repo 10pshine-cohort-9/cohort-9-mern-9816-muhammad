@@ -7,6 +7,7 @@ const users = new mongoose.Schema({
     },
     Email: {
         type: String,
+        unique: true,
         required: true
     },
     encryptedPassword: {

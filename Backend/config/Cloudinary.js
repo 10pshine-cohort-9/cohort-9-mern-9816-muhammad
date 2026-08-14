@@ -12,7 +12,7 @@ cloudinary.config({
 // Verified connection test function
 const connectCloudinary = async () => {
     try {
-        if (!process.env.CLOUDINARY_NAME) {
+        if (!process.env.CLOUDINARY_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
             throw new Error("Cloudinary env variables are missing")
         }
         logger.info("Cloudinary configured successfully")

@@ -14,7 +14,7 @@ const Login = () => {
     const checkLogin = async (event) => {
         event.preventDefault();
         try {
-          const response = axios.post(BACKEND_URL + '/user/login', {Email, Password})
+          const response = await axios.post(BACKEND_URL + '/user/login', {Email, Password})
           console.log(response);
           
         } catch (error) {

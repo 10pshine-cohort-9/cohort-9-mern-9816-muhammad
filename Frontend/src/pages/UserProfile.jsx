@@ -36,10 +36,11 @@ const UserProfile = () => {
                   className="h-20 w-20 rounded-full object-cover opacity-80 ring-4 ring-emerald-100"
                 />
 
-                <label htmlFor="profileImage" className="absolute inset-0 flex items-center justify-center rounded-full bg-stone-900/30">
-                  <assets.ImageUp className="h-6 w-6 text-white" />
+                <label htmlFor="profileImage" className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-stone-900/30">
+                  <assets.ImageUp className="h-6 w-6 text-white" aria-hidden='true' />
+                  <span className="sr-only">Choose Profile Image</span>
                 </label>
-                <input type="file" id="profileImage" accept="image/*" className="hidden" onChange={(event) => setImage(event.target.files[0])} />
+                <input type="file" id="profileImage" accept="image/*" className="sr-only" onChange={(event) => setImage(event.target.files[0])} />
               </div>
             )}
 
