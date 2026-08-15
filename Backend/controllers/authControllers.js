@@ -2,6 +2,7 @@ import express from "express";
 import NotesAppUsers from "../models/Users.js";
 import logger from '../logger/logger.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const signUp = async (req, res) => {
     const saltRounds = 10;
@@ -22,18 +23,21 @@ const signUp = async (req, res) => {
 const Login = async (req, res) => {
     try {
         const {Email, Password}= req.body
+        
         const filteredUser = await NotesAppUsers.findOne({Email})
         if (!filteredUser) {
-            res.status(401).send("No account found with this email")
+            res.status(401).json({'success': false, 'message': "No account found with this email"})
         }
-        const isAuthenticated = bcrypt.compare(Password, filteredUser.Password)
+        const isAuthenticated = await bcrypt.compare(Password, filteredUser.encryptedPassword)
         if (!isAuthenticated) {
             res.status(401).json({'success': false, 'message': 'invalid email or password'})
         }
-        else{
-            res.status(200).json({'success': true, 'message': "Login Successful! Welcome Back"})
+       
+        const token = jwt.sign({id:filteredUser._id}, process.env.JWT_SECRET, {expiresIn: '2d'} )
+            res.status(200).json({'success': true, 'message': "Login Successful! Welcome Back", token})
             logger.info("The user is authenticated")
-        }
+        
+        
     } catch (error) {
         logger.error(error)
     }
