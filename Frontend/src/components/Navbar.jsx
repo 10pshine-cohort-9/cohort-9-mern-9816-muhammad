@@ -22,7 +22,7 @@ return (
     </ul>
     {isLogin === false ?
       (<div className='flex items-center gap-4'>
-     <button onClick={()=> navigate("/signup")} className='hidden md:block bg-stone-400 hover:bg-stone-300 text-emerald-950 px-5 py-2 rounded-lg transition duration-300 shadow'>
+     <button onClick={()=> navigate("/user/signup")} className='hidden md:block bg-stone-400 hover:bg-stone-300 text-emerald-950 px-5 py-2 rounded-lg transition duration-300 shadow'>
       SignUp</button>
     </div>)
     : (
@@ -117,7 +117,7 @@ return (
           </div>
         )
         : 
-        <button type="button" onClick={() => { navigate("/SignUp"); setmobileMenu(false); }}
+        <button type="button" onClick={() => { navigate("/user/signup"); setmobileMenu(false); }}
         className='w-full rounded-lg bg-stone-400 px-5 py-2.5 text-sm font-semibold text-emerald-950 shadow transition hover:bg-stone-300'>
           SignUp</button>
       }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { assets, userProfile } from "../assets/assets";
 const UserProfile = () => {
   const [userData, setuserData] = useState(userProfile);
+  const [Image, setImage] = useState(null)
   const [isEdit, setisEdit] = useState(false);
   return (
     <section className="min-h-screen bg-stone-50 px-4 py-10 sm:px-6 lg:px-8">
@@ -30,14 +31,16 @@ const UserProfile = () => {
             ) : (
               <div className="group relative h-20 w-20 cursor-pointer">
                 <img
-                  src={userData.image}
+                  src={Image ? URL.createObjectURL(Image) : userData.image}
                   alt={userData.Name}
                   className="h-20 w-20 rounded-full object-cover opacity-80 ring-4 ring-emerald-100"
                 />
 
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-stone-900/30">
-                  <assets.ImageUp className="h-6 w-6 text-white" />
-                </div>
+                <label htmlFor="profileImage" className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-stone-900/30">
+                  <assets.ImageUp className="h-6 w-6 text-white" aria-hidden='true' />
+                  <span className="sr-only">Choose Profile Image</span>
+                </label>
+                <input type="file" id="profileImage" accept="image/*" className="sr-only" onChange={(event) => setImage(event.target.files[0])} />
               </div>
             )}
 
