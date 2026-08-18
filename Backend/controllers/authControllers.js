@@ -1,5 +1,6 @@
 import express from "express";
 import NotesAppUsers from "../models/Users.js";
+import UserProfile from "../models/UserProfileSchema.js";
 import logger from '../logger/logger.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -12,7 +13,15 @@ const signUp = async (req, res) => {
     const user = new NotesAppUsers({ UserName, Email, encryptedPassword });
     await user.save();
     res.status(201).json({'success': true, 'message': "Account Created Successfully!"})
-    logger.info("A new user registered successfully")    
+    logger.info("A new user registered successfully")  
+    
+    const userProfile = new UserProfile({
+        UserId: user._id,
+        Name: user.UserName,
+        Email: user.Email
+    })
+    await userProfile.save()
+    logger.info("Profile of newly registered user created successfully")
     } catch (error) {
         res.status(409).send("Add a unique email! This email already exists")
         logger.error(error)
@@ -26,16 +35,17 @@ const Login = async (req, res) => {
         
         const filteredUser = await NotesAppUsers.findOne({Email})
         if (!filteredUser) {
-            res.status(401).json({'success': false, 'message': "No account found with this email"})
+            return res.status(401).json({'success': false, 'message': "No account found with this email"})
         }
         const isAuthenticated = await bcrypt.compare(Password, filteredUser.encryptedPassword)
         if (!isAuthenticated) {
-            res.status(401).json({'success': false, 'message': 'invalid email or password'})
+            logger.error("the user is not authenticated")
+           return res.status(401).json({'success': false, 'message': 'invalid email or password'})
         }
        
         const token = jwt.sign({id:filteredUser._id}, process.env.JWT_SECRET, {expiresIn: '2d'} )
-            res.status(200).json({'success': true, 'message': "Login Successful! Welcome Back", token})
             logger.info("The user is authenticated")
+            return res.status(200).json({'success': true, 'message': "Login Successful! Welcome Back", token})
         
         
     } catch (error) {

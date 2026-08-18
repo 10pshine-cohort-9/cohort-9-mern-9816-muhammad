@@ -22,7 +22,7 @@ const SignUp = () => {
    setUserName('');
    setEmail('');
    setPassword('');
-   
+   navigate('/')
    console.log(response);
       
     } catch (error) {

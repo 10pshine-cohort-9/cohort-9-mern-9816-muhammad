@@ -21,7 +21,7 @@ const App = () => {
         <Route path='/NoteView/:id' element={<NoteView/>}/>
         <Route path='/user/signup' element={<SignUp/>}/>
         <Route path='/user/login' element={<Login/>} />
-        <Route path='/userprofile' element={<UserProfile/>}/>
+        <Route path='/userdata/userprofile' element={<UserProfile/>}/>
         
       </Routes>
       <Footer/>
