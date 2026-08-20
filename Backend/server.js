@@ -5,7 +5,7 @@ import logger from './logger/logger.js'
 import ConnectDb from './config/MongoDb.js'
 import Notesroute from './routes/NotesRoutes.js'
 import authRoutes from './routes/RegLog.js'
-import  connectCloudinary  from './config/Cloudinary.js';
+import  { connectCloudinary }  from './config/Cloudinary.js';
 
 // Call the verification logger
 connectCloudinary();
@@ -31,7 +31,7 @@ app.use(cors({
 }))
 
 app.use('/api', Notesroute )
-app.use('/api/user', authRoutes)
+app.use('/api/user', authRoutes) 
 
 app.get('/', (req, res) => {
     res.send("Api working")
