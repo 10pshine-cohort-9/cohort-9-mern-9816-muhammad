@@ -12,7 +12,6 @@ const signUp = async (req, res) => {
         const encryptedPassword = await bcrypt.hash(Password, saltRounds)
     const user = new NotesAppUsers({ UserName, Email, encryptedPassword });
     await user.save();
-    res.status(201).json({'success': true, 'message': "Account Created Successfully!"})
     logger.info("A new user registered successfully")  
     
     const userProfile = new UserProfile({
@@ -21,7 +20,9 @@ const signUp = async (req, res) => {
         Email: user.Email
     })
     await userProfile.save()
+    res.status(201).json({'success': true, 'message': "Account Created Successfully!"})
     logger.info("Profile of newly registered user created successfully")
+
     } catch (error) {
         res.status(409).send("Add a unique email! This email already exists")
         logger.error(error)

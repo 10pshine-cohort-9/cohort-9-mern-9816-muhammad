@@ -11,7 +11,6 @@ const userAuthantication = async (req, res, next) => {
     }
     const token = header.split(" ")[1];
     const decrypted = await jwt.verify(token, process.env.JWT_SECRET)
-    console.log("jwt payload", decrypted);
     
     req.UserId = decrypted.id;
     next();    

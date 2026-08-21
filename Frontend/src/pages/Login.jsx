@@ -17,11 +17,12 @@ const Login = () => {
         try {
           const response = await axios.post(BACKEND_URL + '/user/login', {Email, Password})
           console.log(response);
-          setEmail('');
-          setPassword('');
 
           if (response.data.success) {
             login(response.data.token);
+            
+            setEmail('');
+            setPassword('');
             navigate('/')
           }
           

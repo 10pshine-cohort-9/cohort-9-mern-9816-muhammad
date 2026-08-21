@@ -18,15 +18,17 @@ const SignUp = () => {
     event.preventDefault();
     try {
    const response = await axios.post(BACKEND_URL + '/user/signup', {UserName, Email, Password});
-
-   setUserName('');
-   setEmail('');
-   setPassword('');
-   navigate('/')
+  
+   if (response.data.success) {
+     setUserName('');
+     setEmail('');
+     setPassword('');
+     navigate('/')
+    }
    console.log(response);
       
     } catch (error) {
-      console.log(error);
+      console.log(error.response?.Data?.message || "SignUp Failed");
       
     }
   }

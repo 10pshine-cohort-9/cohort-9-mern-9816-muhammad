@@ -4,7 +4,6 @@ import UserProfile from '../models/UserProfileSchema.js';
 import { cloudinary } from '../config/Cloudinary.js';
 const getProfile = async (req, res) => {
     try {
-        console.log("user id middleware", req.UserId);
         
         const profile = await UserProfile.findOne({UserId: req.UserId});
         if (!profile) {
@@ -15,31 +14,12 @@ const getProfile = async (req, res) => {
         logger.info(`User's profile with id is finded successfully`) 
     } catch (error) {
         logger.error(error)
-        res.status(404)
+        res.status(500).json({success: false, message: "User profile with that id is not found"})
     }
 }
 
-// const updatedProfile = async (req, res) => {
-//     try {
-//         const { UserId } = req.params;
-//         const url = req.file.path;
-//         const fileName = req.file.originalname;
-
-//         const {Name, Email, Password, Tel, Address, Gender, DoB} = req.body;
-//         const editedProfile = await UserProfile.findByIdAndUpdate({UserId: req.UserId}, {Image: {url: url, fileName: fileName}, Name, Email,
-//              Tel, Address, Gender, DoB}, {returnDocument: 'after', runValidators: true}); 
-//         if (!editedProfile) {
-//             res.status(505).send("Edited Profile not found or invalid Id");
-//         } else {
-//             logger.info(`The profile with id ${UserId} updated successfully`);
-//            return res.status(200).json({success: true, editedProfile})
-//         }     
-//     } catch (error) {
-//         logger.error(error)
-//         res.json({success: false,message: "The profile is not updated"})
-//     }
-// }
 const updatedProfile = async (req, res) => {
+    let newImagepublic_id = null;
     try {
         const { Name, Email, Tel, Gender, Dob } = req.body;
         let updateData = {
@@ -72,54 +52,13 @@ const updatedProfile = async (req, res) => {
                 
                 CloudinaryuploadStream.end(req.file.buffer)  
             })
+            newImagepublic_id = result.public_id
             updateData.Image = {
                 url: result.secure_url,
-                fileName: req.file.originalname
+                fileName: req.file.originalname,
+                public_id: result.public_id
             };
         }
-
-        // Upload new image to Cloudinary
-//         if (req.file) {
-//         const result = await new Promise((resolve, reject) => {
-//         const uploadStream = cloudinary.uploader.upload_stream(
-//             {
-//                 folder: "NotesAppUsers",
-//                 resource_type: "image"
-//             },
-//             (error, result) => {
-//                 if (error) {
-//                     console.error("========== CLOUDINARY UPLOAD ERROR ==========");
-//                     console.dir(error, { depth: null });
-//                     console.error("==============================================");
-//                     reject(error);
-//                 } else {
-//                     resolve(result);
-//                 }
-//             }
-//         );
-
-//         uploadStream.end(req.file.buffer);
-//     });
-
-//     console.log("CLOUDINARY RESULT:", result);
-
-//     updateData.Image = {
-//         url: result.secure_url,
-//         fileName: req.file.originalname
-//     };
-// }
-
-        console.log("UPDATE DATA:", updateData);
-
-        // // If an image was uploaded
-        // if (req.file) {
-        //     updateData.Image = {
-        //         url: req.file.path,
-        //         fileName: req.file.originalname
-        //     };
-            
-        // }
-        // console.log("UPDATE DATA:", updateData);
 
         const editedProfile = await UserProfile.findOneAndUpdate(
             { UserId: req.UserId },
@@ -136,6 +75,7 @@ const updatedProfile = async (req, res) => {
                 message: "Profile not found"
             });
         }
+        const oldImagepublic_id = editedProfile.Image?.public_id; 
 
         logger.info(
             `The profile with user id ${req.UserId} updated successfully`
@@ -148,7 +88,6 @@ const updatedProfile = async (req, res) => {
 
      }
      catch (error) {
-    console.error("UPDATE PROFILE ERROR:", error);
 
     logger.error({
         error: error.message,
@@ -160,15 +99,7 @@ const updatedProfile = async (req, res) => {
         message: error.message
     });
 }
-     // catch (error) {
-
-    //     logger.error(error);
-
-    //     return res.status(500).json({
-    //         success: false,
-    //         message: "The profile is not updated"
-    //     });
-    //}
+    
 };
 
 export {getProfile, updatedProfile}

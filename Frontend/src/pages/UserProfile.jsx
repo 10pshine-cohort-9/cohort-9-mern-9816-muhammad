@@ -20,6 +20,7 @@ const UserProfile = () => {
     Image: null
   });
   const [Image, setImage] = useState(null)
+  const [imageView, setimageView] = useState(null)
   console.log("Selected image:", Image);
   const [isEdit, setisEdit] = useState(false);
 
@@ -47,14 +48,24 @@ const UserProfile = () => {
         setuserData(response.data.profile)
         setuserProfile(response.data.profile)
       }
-
-    console.log(response);
-
+      
     } catch (error) {
       console.log(error)
     }
     
   }
+useEffect( ()=> {
+  if (!Image) {
+    setimageView(null);
+    return
+  }
+  const imageUrl = URL.createObjectURL(Image)
+  setimageView(imageUrl)
+
+  return ()=> {
+    URL.revokeObjectURL(imageUrl)
+  }
+}, [Image])
 
 useEffect(() => {
     if (userProfile) {
@@ -82,14 +93,14 @@ useEffect(() => {
           <div className="flex flex-col items-center gap-4 border-b border-stone-200 pb-6 sm:flex-row sm:items-center">
             {isEdit === false ? (
               <img
-                src={userData?.Image?.url}
-                alt="your image"
+                src={imageView || userData?.Image?.url}
+                alt={userData?.Name || "your image"}
                 className="h-20 w-20 rounded-full object-cover ring-4 ring-emerald-50"
               />
             ) : (
               <div className="group relative h-20 w-20 cursor-pointer">
                 <img
-                  src={Image ? URL.createObjectURL(Image) : userData?.Image?.url}
+                  src={imageView || userData?.Image?.url}
                   
                   className="h-20 w-20 rounded-full object-cover opacity-80 ring-4 ring-emerald-100"
                 />
@@ -123,11 +134,14 @@ useEffect(() => {
             </div>
 
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (isEdit === true) {
-                  editedProfile();
+                  await editedProfile();
+                  setisEdit(false)
                 }
-               setisEdit(!isEdit)}}
+                else{
+                  setisEdit(true)}}
+                }
               className="w-full sm:w-auto shrink-0 rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
             >
               {isEdit ? "Save Changes" : "Edit"}
@@ -142,21 +156,9 @@ useEffect(() => {
               <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:items-center sm:gap-4">
                 <span className="text-sm text-stone-700">Email Address</span>
                 <div className="sm:col-span-2">
-                  {isEdit === false ? (
+                  
                     <p className="text-sm text-stone-800">{userData.Email}</p>
-                  ) : (
-                    <input
-                      type="email"
-                      value={userData.Email}
-                      onChange={(event) =>
-                        setuserData((prev) => ({
-                          ...prev,
-                          Email: event.target.value,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-stone-300 bg-stone-50 px-3 py-2 text-sm text-stone-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30"
-                    />
-                  )}
+                  
                 </div>
               </div>
 

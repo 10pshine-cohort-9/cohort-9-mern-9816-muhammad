@@ -12,7 +12,11 @@ const ProfileSchema = new mongoose.Schema({
         type: String,
         default: "https://res.cloudinary.com/sinwqkak/image/upload/v1786729161/party_pic_frbs9t.jpg"
         },           
-        fileName: String
+        fileName: String,
+        public_id: {
+            type: String,
+            default: ""
+        }
     },
     Name:{
         type: String,

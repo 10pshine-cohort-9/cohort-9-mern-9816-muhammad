@@ -14,22 +14,6 @@ const AppContextProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [userProfile, setuserProfile] = useState(null);
     
-    
-  const getProfile = async () => {
-    try {
-      const response = await axios.get(BACKEND_URL + '/userdata/userprofile', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Prfile response", response.data.profile);
-      
-      setuserProfile(response.data.profile);
-    } catch (error) {
-      console.log("PROFILE ERROR:", error.response?.data || error);
-    }
-  };
-
   const login = (newToken) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
@@ -41,10 +25,38 @@ const AppContextProvider = (props) => {
   };
 
   useEffect( () => {
-    if (token) {
-        getProfile();
-    } else {
-        setuserProfile(null)
+    if (!token) {
+        setuserProfile(null);
+        return
+    }
+    const currentToken = token;
+    const controller = new AbortController();
+
+    const getProfile = async () => {
+   
+      
+      try {
+        const response = await axios.get(BACKEND_URL + '/userdata/userprofile', {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+          signal: controller.signal
+        },
+      });
+
+      if (!controller.signal.aborted) {
+        console.log("Prfile got");
+        setuserProfile(response.data.profile);
+        
+      }
+      
+    } catch (error) {
+      console.log("PROFILE ERROR:", error.response?.data || error);
+    }
+  };
+    getProfile()
+    
+    return ()=> {
+      controller.abort()
     }
   }, [token])
 
