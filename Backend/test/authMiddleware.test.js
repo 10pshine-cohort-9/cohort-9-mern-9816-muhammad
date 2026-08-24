@@ -44,53 +44,32 @@ describe("Testing the User Authentication", () => {
             headers: {}
         };
 
-
         const res = {
             status: sinon.stub().returnsThis(),
             json: sinon.spy()
         };
 
-
         const next = sinon.spy();
-
 
         // Run middleware
         await userAuthantication(req, res, next);
 
-
         // Check status
-        expect(
-            res.status.calledOnce
-        ).to.equal(true);
+        expect(res.status.calledOnce).to.equal(true);
 
-
-        expect(
-            res.status.firstCall.args[0]
-        ).to.equal(401);
-
+        expect(res.status.firstCall.args[0]).to.equal(401);
 
         // Check response
-        expect(
-            res.json.calledOnce
-        ).to.equal(true);
+        expect(res.json.calledOnce).to.equal(true);
 
+        const responseData = res.json.firstCall.args[0];
 
-        const responseData =
-            res.json.firstCall.args[0];
+        expect(responseData.success).to.equal(false);
 
+        expect(responseData.message).to.equal("Token is not provided");
 
-        expect(responseData.success)
-            .to.equal(false);
-
-
-        expect(responseData.message)
-            .to.equal("Token is not provided");
-
-
-        // next() should NOT be called
-        expect(
-            next.called
-        ).to.equal(false);
+        // next() should not be called
+        expect(next.called).to.equal(false);
 
     });
 
@@ -102,56 +81,35 @@ describe("Testing the User Authentication", () => {
             }
         };
 
-
         const res = {
             status: sinon.stub().returnsThis(),
             json: sinon.spy()
         };
 
-
         const next = sinon.spy();
 
-
         // Make jwt.verify throw an error
-        sinon.stub(jwt, "verify")
-            .throws(new Error("Invalid token"));
-
+        sinon.stub(jwt, "verify").throws(new Error("Invalid token"));
 
         // Run middleware
         await userAuthantication(req, res, next);
 
-
         // Check status
-        expect(
-            res.status.calledOnce
-        ).to.equal(true);
+        expect(res.status.calledOnce).to.equal(true);
 
-
-        expect(
-            res.status.firstCall.args[0]
-        ).to.equal(401);
+        expect(res.status.firstCall.args[0]).to.equal(401);
+        
         // Check response
-        expect(
-            res.json.calledOnce
-        ).to.equal(true);
+        expect(res.json.calledOnce).to.equal(true);
 
+        const responseData = res.json.firstCall.args[0];
 
-        const responseData =
-            res.json.firstCall.args[0];
+        expect(responseData.success).to.equal(false);
 
+        expect(responseData.message).to.equal("Invalid or Expired Token");
 
-        expect(responseData.success)
-            .to.equal(false);
-
-
-        expect(responseData.message)
-            .to.equal("Invalid or Expired Token");
-
-
-        // next() should NOT be called
-        expect(
-            next.called
-        ).to.equal(false);
+        // next() should not be called
+        expect(next.called).to.equal(false);
 
     });
     

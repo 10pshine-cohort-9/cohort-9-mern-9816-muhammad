@@ -121,30 +121,22 @@ describe('Authentication Controller', () => {
             }
         };
 
-
         const res = {
             status: sinon.stub().returnsThis(),
             json: sinon.spy(),
             send: sinon.spy()
         };
 
-
         // Database returns no user
-        sinon.stub(NotesAppUsers, "findOne")
-            .resolves(null);
-
+        sinon.stub(NotesAppUsers, "findOne").resolves(null);
 
         // Run controller
         await Login(req, res);
 
-
         // Check status
         expect(res.status.calledOnce).to.equal(true);
 
-        expect(
-            res.status.firstCall.args[0]
-        ).to.equal(401);
-
+        expect(res.status.firstCall.args[0]).to.equal(401);
 
         // Check response
         expect(res.json.calledOnce).to.equal(true);
@@ -152,20 +144,13 @@ describe('Authentication Controller', () => {
         const responseData = res.json.firstCall.args[0];
 
 
-        expect(responseData.success)
-            .to.equal(false);
+        expect(responseData.success).to.equal(false);
 
-        expect(responseData.message)
-            .to.equal(
-                "No account found with this email"
-            );
+        expect(responseData.message).to.equal("No account found with this email");
 
     });
 
-
-    // ==========================================
-    // TEST 3: WRONG PASSWORD
-    // ==========================================
+    // Test 3: Wrong Password
 
     it("should return 401 if password is incorrect", async () => {
 
@@ -176,13 +161,11 @@ describe('Authentication Controller', () => {
             }
         };
 
-
         const res = {
             status: sinon.stub().returnsThis(),
             json: sinon.spy(),
             send: sinon.spy()
         };
-
 
         const fakeUser = {
             _id: "123456789",
@@ -192,26 +175,18 @@ describe('Authentication Controller', () => {
 
 
         // User exists
-        sinon.stub(NotesAppUsers, "findOne")
-            .resolves(fakeUser);
+        sinon.stub(NotesAppUsers, "findOne").resolves(fakeUser);
 
+        // Password does not match
+        sinon.stub(bcrypt, "compare").resolves(false);
 
-        // Password does NOT match
-        sinon.stub(bcrypt, "compare")
-            .resolves(false);
-
-
-        // Run controller
+        // Run Controller
         await Login(req, res);
-
 
         // Check status
         expect(res.status.calledOnce).to.equal(true);
 
-        expect(
-            res.status.firstCall.args[0]
-        ).to.equal(401);
-
+        expect(res.status.firstCall.args[0]).to.equal(401);
 
         // Check response
         expect(res.json.calledOnce).to.equal(true);
@@ -219,13 +194,9 @@ describe('Authentication Controller', () => {
         const responseData = res.json.firstCall.args[0];
 
 
-        expect(responseData.success)
-            .to.equal(false);
+        expect(responseData.success).to.equal(false);
 
-        expect(responseData.message)
-            .to.equal(
-                "invalid email or password"
-            );
+        expect(responseData.message).to.equal("invalid email or password" );
 
     });
     })
