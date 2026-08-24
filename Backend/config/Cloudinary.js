@@ -21,13 +21,13 @@ const connectCloudinary = async () => {
     }
 };
 
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: 'NotesAppUsers',
-        allowed_formats: ['jpg', 'png', 'jpeg'],
-    },
-});
+// const storage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     params: {
+//         folder: 'NotesAppUsers',
+//         allowed_formats: ['jpg', 'png', 'jpeg'],
+//     },
+// });
 
 // Export 
-export { connectCloudinary, storage };
+export { connectCloudinary, cloudinary };

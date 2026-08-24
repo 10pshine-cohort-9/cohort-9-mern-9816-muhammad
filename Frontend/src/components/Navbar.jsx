@@ -1,13 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {NavLink, useNavigate} from 'react-router-dom'
 import { assets, userProfile } from '../assets/assets';
+import { AppContext } from '../context/AppContext';
 const Navbar = () => {
-
+  const {token, logout, userProfile} = useContext(AppContext)
+  const [userData, setuserData] = useState("")
   const navigate = useNavigate();
-  const [isLogin, setisLogin] = useState(true)
+  //const [isLogin, setisLogin] = useState(false)
   const [mobileMenu, setmobileMenu] = useState(false)
   const [profileMenu, setprofileMenu] = useState(false)
-
+  
+  useEffect( ()=> {
+    if(userProfile){
+      setuserData(userProfile)
+    }
+  }, [userProfile])
 return (
 <>    
 {/*This is the Desktop or big screens Navbar*/}
@@ -20,7 +27,7 @@ return (
       <NavLink to="/all-notes" className="text-emerald-950 hover:text-emerald-900 transition duration-200"><li>ALL-NOTES</li></NavLink>
       <NavLink to="/new-note" className="text-emerald-950 hover:text-emerald-900 transition duration-200"><li>NEW-NOTE</li></NavLink>
     </ul>
-    {isLogin === false ?
+    {!token ?
       (<div className='flex items-center gap-4'>
      <button onClick={()=> navigate("/user/signup")} className='hidden md:block bg-stone-400 hover:bg-stone-300 text-emerald-950 px-5 py-2 rounded-lg transition duration-300 shadow'>
       SignUp</button>
@@ -29,18 +36,18 @@ return (
     <div className='relative'>
       <button type='button' onClick={() => setprofileMenu(!profileMenu)} aria-haspopup='menu' aria-expanded={profileMenu} 
       className='flex items-center gap-2 cursor-pointer'>
-      <img src={userProfile.image} alt="your_image" className='w-10 h-10 rounded-full ring-2 ring-transparent transition '/> 
+      <img src={userData?.Image?.url} alt="your_image" className='w-10 h-10 rounded-full ring-2 ring-transparent transition '/> 
       <assets.ChevronDown className='w-4 h-4 text-emerald-950 transition duration-200 '/>
       </button>
 
       {profileMenu && (
       <div className='absolute right-0 top-full z-20 pt-3'>
         <div className='flex min-w-48 flex-col overflow-hidden rounded-xl border border-stone-200 bg-stone-50 shadow-lg shadow-stone-300/60'>
-      <button onClick={()=> {navigate('/userprofile'), setprofileMenu(!profileMenu)}}
+      <button onClick={()=> {navigate('/userdata/userprofile'); setprofileMenu(!profileMenu)}}
       className='px-4 py-2.5 text-left text-sm font-medium text-stone-700 transition hover:bg-emerald-50 hover:text-emerald-900 cursor-pointer'>
         My Profile</button>
           <div className='h-px bg-stone-200'/>
-       <button onClick={()=>{ setisLogin(false); navigate("/"); }} 
+       <button onClick={()=>{ logout(); navigate("/"); }} 
       className='px-4 py-2.5 text-left text-sm font-medium text-stone-700 transition hover:bg-red-50'>Logout</button>
         </div>
      </div>
@@ -84,7 +91,7 @@ return (
       </nav>     
     
       <div className='border-t border-stone-200 px-6 py-5'>
-        {isLogin ? (
+        {token ? (
           <div>
             <button type="button" onClick={() => setprofileMenu(!profileMenu)}
              className='flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-50' >
@@ -95,7 +102,7 @@ return (
             {profileMenu && (
               <div className='mt-1 flex flex-col overflow-hidden rounded-lg border border-stone-200'>
                 <button type='button' onClick={() => {
-                  navigate("/UserProfile");
+                  navigate("/userdata/userprofile");
                   setmobileMenu(false);
                   setprofileMenu(false);
                 }}
@@ -104,7 +111,7 @@ return (
 
                 <div className='h-px bg-stone-200'/>
                   <button type="button" onClick={()=>{
-                    setisLogin(false);
+                     logout();
                      navigate("/");
                      setmobileMenu(false);
                      setprofileMenu(false);

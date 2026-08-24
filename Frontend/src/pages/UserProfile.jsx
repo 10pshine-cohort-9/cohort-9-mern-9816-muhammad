@@ -1,9 +1,78 @@
-import React, { useState } from "react";
-import { assets, userProfile } from "../assets/assets";
+import React, { useState} from "react";
+import { assets } from "../assets/assets";
+import axios from 'axios'
+import { useContext } from 'react'
+import { AppContext } from '../context/AppContext'
+import { useEffect } from "react";
+
 const UserProfile = () => {
-  const [userData, setuserData] = useState(userProfile);
+  const {BACKEND_URL, token, userProfile, setuserProfile} = useContext(AppContext)
+  const [userData, setuserData] = useState({
+    Name: "",
+    Email:"",
+    Tel:"",
+    Gender:"",
+    Dob:"",
+    Address: {
+      house:"",
+      CityState:""
+    },
+    Image: null
+  });
   const [Image, setImage] = useState(null)
+  const [imageView, setimageView] = useState(null)
+  console.log("Selected image:", Image);
   const [isEdit, setisEdit] = useState(false);
+
+  const editedProfile = async () => {
+    try {
+      const formData = new FormData()
+  formData.append("Name", userData.Name)
+  formData.append("Email", userData.Email)
+  formData.append("Tel", userData.Tel)
+  formData.append("Gender", userData.Gender)
+  formData.append("Dob", userData.Dob)
+  formData.append("Address[house]", userData.Address.house)
+  formData.append("Address[CityState]", userData.Address.CityState)
+
+  if (Image) {
+    formData.append("Image", Image)
+  }  
+      const response = await axios.put(BACKEND_URL + `/userdata/userprofile`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      if(response.data.success){
+        setuserData(response.data.profile)
+        setuserProfile(response.data.profile)
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+useEffect( ()=> {
+  if (!Image) {
+    setimageView(null);
+    return
+  }
+  const imageUrl = URL.createObjectURL(Image)
+  setimageView(imageUrl)
+
+  return ()=> {
+    URL.revokeObjectURL(imageUrl)
+  }
+}, [Image])
+
+useEffect(() => {
+    if (userProfile) {
+        setuserData(userProfile);
+    }
+}, [userProfile]);
+
   return (
     <section className="min-h-screen bg-stone-50 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
@@ -24,15 +93,15 @@ const UserProfile = () => {
           <div className="flex flex-col items-center gap-4 border-b border-stone-200 pb-6 sm:flex-row sm:items-center">
             {isEdit === false ? (
               <img
-                src={userData.image}
-                alt={userData.Name}
+                src={imageView || userData?.Image?.url}
+                alt={userData?.Name || "your image"}
                 className="h-20 w-20 rounded-full object-cover ring-4 ring-emerald-50"
               />
             ) : (
               <div className="group relative h-20 w-20 cursor-pointer">
                 <img
-                  src={Image ? URL.createObjectURL(Image) : userData.image}
-                  alt={userData.Name}
+                  src={imageView || userData?.Image?.url}
+                  
                   className="h-20 w-20 rounded-full object-cover opacity-80 ring-4 ring-emerald-100"
                 />
 
@@ -65,7 +134,14 @@ const UserProfile = () => {
             </div>
 
             <button
-              onClick={() => setisEdit(!isEdit)}
+              onClick={async () => {
+                if (isEdit === true) {
+                  await editedProfile();
+                  setisEdit(false)
+                }
+                else{
+                  setisEdit(true)}}
+                }
               className="w-full sm:w-auto shrink-0 rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
             >
               {isEdit ? "Save Changes" : "Edit"}
@@ -80,21 +156,9 @@ const UserProfile = () => {
               <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:items-center sm:gap-4">
                 <span className="text-sm text-stone-700">Email Address</span>
                 <div className="sm:col-span-2">
-                  {isEdit === false ? (
+                  
                     <p className="text-sm text-stone-800">{userData.Email}</p>
-                  ) : (
-                    <input
-                      type="email"
-                      value={userData.Email}
-                      onChange={(event) =>
-                        setuserData((prev) => ({
-                          ...prev,
-                          Email: event.target.value,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-stone-300 bg-stone-50 px-3 py-2 text-sm text-stone-800 outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30"
-                    />
-                  )}
+                  
                 </div>
               </div>
 
@@ -124,14 +188,15 @@ const UserProfile = () => {
                 <div className="sm:col-span-2">
                   {isEdit === false ? (
                     <div className="text-sm text-stone-800">
-                      <p>{userData.Address.house}</p>
-                      <p>{userData.Address.CityState}</p>
+                      <p>{userData?.Address?.house}</p>
+                      <p>{userData?.Address?.CityState}</p>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-2">
                       <input
                         type="text"
-                        value={userData.Address.house}
+                        placeholder="Enter your street address"
+                        value={userData?.Address?.house || ""}
                         onChange={(event) =>
                           setuserData((prev) => ({
                             ...prev,
@@ -146,7 +211,8 @@ const UserProfile = () => {
 
                       <input
                         type="text"
-                        value={userData.Address.CityState}
+                        placeholder="Enter city and state"
+                        value={userData?.Address?.CityState || ""}
                         onChange={(event) =>
                           setuserData((prev) => ({
                             ...prev,

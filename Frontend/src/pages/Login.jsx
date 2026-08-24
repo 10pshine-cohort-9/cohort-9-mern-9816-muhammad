@@ -6,6 +6,7 @@ import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 const Login = () => {
 
+    const {login} = useContext(AppContext)
     const {BACKEND_URL} = useContext(AppContext)
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
@@ -16,15 +17,24 @@ const Login = () => {
         try {
           const response = await axios.post(BACKEND_URL + '/user/login', {Email, Password})
           console.log(response);
+
+          if (response.data.success) {
+            login(response.data.token);
+            
+            setEmail('');
+            setPassword('');
+            navigate('/')
+          }
           
         } catch (error) {
           console.log(error);
           
         }
+        
     }
   return (
     <section className='flex min-h-[calc(100vh-160px)] items-center justify-center bg-gradient-to-b from-stone-50/70 to-white px-4 py-10 sm:px-6'>
-      <form onSubmit={checkLogin}
+      <form onSubmit={(event) => checkLogin(event)}
       className='w-full max-w-md rounded-3xl border border-stone-500 bg-stone-100 p-6 shadow-xl shadow-stone-100/50 sm:p-8'>
        <div className='text-center'>
           <span className='inline-flex rounded-full bg-stone-50 px-4 py-2 text-sm font-semibold text-emerald-800'>NOTESBOOK Login</span>
