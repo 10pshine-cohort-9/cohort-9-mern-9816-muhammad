@@ -203,6 +203,7 @@ describe("Testing the Profile_Controller", function () {
                     success: false,
                     message: "Database update failed"
                 })).to.equal(true);
+            })        
 
     it("should update profile with a new image successfully", async function () {
 
@@ -362,4 +363,3 @@ describe("Testing the Profile_Controller", function () {
   
 })
 
-});

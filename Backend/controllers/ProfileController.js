@@ -35,6 +35,16 @@ const updatedProfile = async (req, res) => {
             Dob
         };
 
+        const existingProfile = await UserProfile.findOne({ UserId: req.UserId })
+        if (!existingProfile) {
+            return res.status(404).json({
+            success: false,
+            message: "Profile not found"
+        });
+        }
+
+        oldImagepublic_id = existingProfile.Image?.public_id || null;
+        
         if (req.file) {
             const result = await new Promise ((resolve, reject) => {
              const CloudinaryuploadStream = cloudinary.uploader.upload_stream(
@@ -60,16 +70,6 @@ const updatedProfile = async (req, res) => {
                 public_id: result.public_id
             };
         }
-
-        const existingProfile = await UserProfile.findOne({ UserId: req.UserId })
-        if (!existingProfile) {
-            return res.status(404).json({
-            success: false,
-            message: "Profile not found"
-        });
-        }
-
-        oldImagepublic_id = existingProfile.Image?.public_id || null;
 
         const editedProfile = await UserProfile.findOneAndUpdate(
             { UserId: req.UserId },
