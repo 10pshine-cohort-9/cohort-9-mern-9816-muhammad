@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState, useContext } from "react";
 import { AppContext } from "../context/AppContext.jsx";
-
+import RichTextEditor from "../components/RichTextEditor.jsx";
 const CreateNote = () => {
   const { BACKEND_URL } = useContext(AppContext);
 
@@ -108,7 +108,8 @@ const CreateNote = () => {
               >
                 Add Content:
               </label>
-              <textarea
+              <RichTextEditor value={Content} onChange={setContent} />
+              {/* <textarea
                 id="content"
                 rows={5}
                 cols={30}
@@ -116,7 +117,7 @@ const CreateNote = () => {
                 placeholder="start typing"
                 onChange={(event) => setContent(event.target.value)}
                 className="w-full resize-none rounded-lg border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30"
-              ></textarea>
+              ></textarea> */}
             </div>
 
             <button
