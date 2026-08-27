@@ -1,6 +1,6 @@
 import
 {NotebookText, Search, Tags, Cone, ArrowRight, Menu, X,
-PenLine, BookMarked, Trash2, Eye, ChevronDown, ImageUp} from 'lucide-react' 
+PenLine, BookMarked, Trash2, Eye, ChevronDown, ImageUp, FileDown, FileUp} from 'lucide-react' 
 export const CardFeatures = [
     {
         'id' : "Card 1",
@@ -35,7 +35,9 @@ export const assets = {
     bannerimage,
     Eye,
     ChevronDown,
-    ImageUp
+    ImageUp,
+    FileDown, 
+    FileUp
 }
 
 export const dummyNotes = [

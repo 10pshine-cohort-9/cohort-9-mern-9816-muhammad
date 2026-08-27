@@ -3,6 +3,8 @@ import axios from "axios";
 import { useState, useContext } from "react";
 import { AppContext } from "../context/AppContext.jsx";
 import RichTextEditor from "../components/RichTextEditor.jsx";
+import NoteImportExport from "../components/NoteImportExport.jsx";
+
 const CreateNote = () => {
   const { BACKEND_URL } = useContext(AppContext);
 
@@ -119,7 +121,11 @@ const CreateNote = () => {
                 className="w-full resize-none rounded-lg border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30"
               ></textarea> */}
             </div>
+            <NoteImportExport title={Title} content={Content} onImport={(importedNote) => {
 
+                setTitle(importedNote.title);
+                setContent(importedNote.content);
+             }}     />
             <button
               type="submit"
               className="mt-2 inline-flex w-full sm:w-auto sm:self-end items-center justify-center gap-2 rounded-full bg-emerald-600 px-3 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-1"
