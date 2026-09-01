@@ -134,7 +134,7 @@ describe('Authentication Controller', () => {
         // Run controller
         await Login(req, res);
 
-        // Check status
+         // Check status
         expect(res.status.calledOnce).to.equal(true);
 
         expect(res.status.firstCall.args[0]).to.equal(401);
