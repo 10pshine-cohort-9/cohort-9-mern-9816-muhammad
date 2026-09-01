@@ -38,6 +38,7 @@ describe('Authentication Controller', () => {
         await signUp(req, res)
 
         expect(res.status.calledOnce).to.equal(true)
+        expect(res.status.calledWith(201)).to.equal(true)
         const responseData = res.json.firstCall.args[0]
         expect(responseData.success).to.equal(true)
         expect(responseData.message).to.equal("Account Created Successfully!")

@@ -344,7 +344,7 @@ describe("Unit Tests for Notes Controller", () => {
                 Content: "Note content"
         }
 
-        const delStub = sinon.stub(Note, "findByIdAndDelete").resolves(deleteNote);
+        const delStub = sinon.stub(Note, "findByIdAndDelete").resolves(deletedNote);
 
         const req = {
             params: {
@@ -364,7 +364,7 @@ describe("Unit Tests for Notes Controller", () => {
 
         expect(delStub.calledWith('321')).to.equal(true)
         expect(res.json.calledOnce).to.equal(true)
-        expect(res.json.firstCall.args[0]).to.deep.equal(deleteNote)
+        expect(res.json.firstCall.args[0]).to.deep.equal(deletedNote)
        })
 
        it("should return 404 if note is not found while deleting", async () => {
