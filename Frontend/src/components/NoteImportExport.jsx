@@ -30,7 +30,7 @@ const NoteImportExport = ({title, content, onImport}) => {
     if (!file) {
         return
     }
-    if (file.type !== "application/json") {
+    if (file.type !== "application/json" || !file.name.toLowerCase().endsWith(".json")) {
         alert("Please select a json file")
         event.target.value = ""
         return
