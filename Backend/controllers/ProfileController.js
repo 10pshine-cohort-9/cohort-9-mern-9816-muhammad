@@ -81,6 +81,11 @@ const updatedProfile = async (req, res) => {
         );
 
         if (!editedProfile) {
+
+            if (newImagepublic_id) {
+                await cloudinary.uploader.destroy(newImagepublic_id);
+            }
+            
             return res.status(404).json({
                 success: false,
                 message: "Profile not found"

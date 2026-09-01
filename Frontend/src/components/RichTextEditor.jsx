@@ -25,9 +25,7 @@ const RichTextEditor = ({ value, onChange }) => {
 
     ],
     content: value,
-    onUpdate: ({editor}) => {
-        onChange(editor.getHTML())
-    }
+    onUpdate: ({editor}) => { onChange(editor.getHTML()) }
  })
 
  useEffect( ()=> {
@@ -90,7 +88,7 @@ const RichTextEditor = ({ value, onChange }) => {
                className={button(editor.isActive('underline'))} >
                 <u>U</u>
             </button>
-                        <divider/>
+                        { divider() }
            
             {/*For make text as Heading 1*/}
             <button type="button" title='Heading 1' onClick={() => editor.chain().focus().toggleHeading({level:1}).run() }
@@ -103,7 +101,7 @@ const RichTextEditor = ({ value, onChange }) => {
               className={button(editor.isActive('heading', {level: 2}))} >
                 H2
             </button>
-                        <divider/>
+                        { divider() }
 
             {/*For make text Toggle BulletList*/}
             <button type="button" title='Bullet List' onClick={() => editor.chain().focus().toggleBulletList().run() } 
@@ -117,7 +115,7 @@ const RichTextEditor = ({ value, onChange }) => {
                 1.
             </button>
             
-                        <divider/>
+                        { divider() }
 
             {/*For make text Toggle Align Left*/}
             <button type="button" title='Align Left' onClick={() => editor.chain().focus().toggleTextAlign("left").run() } 
