@@ -11,13 +11,13 @@ const signUp = async (req, res) => {
     const saltRounds = 10;
     try {
         const { UserName, Email, Password }  = req.body;
-         if (UserName === "") {
+         if (!UserName || !UserName.trim()) {
                 return res.status(400).json({
                     success: false,
                     message: "UserName is required"
                 })
               }
-              if (!Email.trim()) {
+              if (typeof Email !== "string" ||  !Email.trim()) {
                 return res.status(400).json({
                     success: false,
                     message: "Email is required"
@@ -66,7 +66,7 @@ const Login = async (req, res) => {
     try {
         const {Email, Password}= req.body
 
-        if (!Email.trim()) {
+        if (typeof Email !== "string" || !Email.trim()) {
             return res.status(400).json({
             success: false,
             message: "Email is required"

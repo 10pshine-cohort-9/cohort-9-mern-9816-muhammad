@@ -19,7 +19,7 @@ const SignUp = () => {
   const passwordRegExpression = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
   const registerUser = async (event) => {
     event.preventDefault();
-     if (UserName === "") {
+     if (!UserName || !UserName.trim()) {
         showWarning("UserName is required")
         return;
       }

@@ -33,7 +33,6 @@ const Login = () => {
           //   return;
           // }
           const response = await axios.post(BACKEND_URL + '/user/login', {Email, Password})
-          console.log(response);
 
           if (response.data.success) {
             login(response.data.token);

@@ -13,7 +13,7 @@ const CreateNote = async (req, res) => {
                 })
             }
 
-            if (!Category.length >= 5) {
+            if (Category.length < 5) {
             return res.status(400).json({
                    success: false,
                    message: "Note Category should be of atleast 5 characters"
@@ -27,7 +27,7 @@ const CreateNote = async (req, res) => {
                 })
             }
 
-            if (!Title.length >= 5) {
+            if (Title.length < 5) {
             return res.status(400).json({
                    success: false,
                    message: "Note Title should be of atleast 5 characters"
@@ -48,15 +48,15 @@ const CreateNote = async (req, res) => {
                    message: "Content is required"
                })
             }    
-            if (!plainContent.length >= 20) {
+            if (plainContent.length < 20) {
             return res.status(400).json({
                    success: false,
                    message: "Note Content should be of atleast 20 characters"
                }) 
             }
-
+    const sanitizedContent = sanitize(Content);
     const UserId = req.UserId
-    const newNote = {UserId, Category, Title, dateOfCreation, Content}
+    const newNote = {UserId, Category, Title, dateOfCreation, Content: sanitizedContent}
     const AddNote = new Note(newNote)
     await AddNote.save();
     logger.info("New Note Created Successfully")
@@ -137,9 +137,10 @@ const editNote = async (req, res) => {
                    message: "Note Content should be of atleast 20 characters"
                }) 
             }
-             
+            
+            const sanitizedContent = sanitize(Content);
     try {
-         const editedNote = await Note.findOneAndUpdate({_id: id, UserId: req.UserId}, { Title: Title, dateOfCreation: dateOfCreation, Content: Content}, {returnDocument: 'after', runValidators: true});
+         const editedNote = await Note.findOneAndUpdate({_id: id, UserId: req.UserId}, { Title: Title, dateOfCreation: dateOfCreation, Content: sanitizedContent}, {returnDocument: 'after', runValidators: true});
         if (!editedNote) {
             res.status(404).send("Edited note not found or invalid ID")
         } else {

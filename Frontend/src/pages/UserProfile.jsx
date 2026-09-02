@@ -64,10 +64,12 @@ const UserProfile = () => {
 
       if (!file.type.startsWith('image/')) {
         showWarning("Please select a valid image")
+        return
       }
 
       if (file.size > 5 * 1024 * 1024) {
       showWarning("Image must be smaller than 5MB")
+      return
       }
       setImage(file)
   }

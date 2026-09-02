@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import RichTextEditor from "../components/RichTextEditor";
 import axios from "axios";
 import { showError, showSuccess, showWarning } from "../utils/reactToastify";
+import { deleteNote } from "../../../Backend/controllers/NotesControllers";
 
 const NoteView = () => {
   const { id } = useParams();
@@ -75,10 +76,10 @@ const NoteView = () => {
   }
   }
 
-  const deleteNote = () => {
+  const deleteNote = async () => {
     if (Delete === true) {
       try {
-        axios.delete(BACKEND_URL + `/delete-note/${id}`, {
+        await axios.delete(BACKEND_URL + `/delete-note/${id}`, {
           headers:{
           Authorization: `Bearer ${token}`
         }
@@ -168,7 +169,13 @@ const NoteView = () => {
           <div className="mt-6 flex flex-col-reverse gap-3 border-t border-stone-200 pt-5 sm:flex-row sm:justify-end">
             {isEdit ? (
               <button
-                onClick={async () => {await editNote(), setisEdit(false)}}
+                onClick={async () => { 
+                  const success = await editNote();
+                  if (success) {
+                    setisEdit(false)
+                  }
+                //  await editNote(), setisEdit(false)
+                }}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
               >
                 Save
@@ -182,8 +189,15 @@ const NoteView = () => {
                   Edit
                 </button>
                 <button
-                  onClick={() => {
-                    (deleteNote(), setDelete(true), navigate("/all-notes"));
+                  onClick={async () => {
+                    const success = await deleteNote()
+                    if (success) {
+                      setDelete(true);
+                      navigate("/all-notes");
+                    }
+                    // (
+
+                    //   deleteNote(), setDelete(true), navigate("/all-notes"));
                   }}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 px-6 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100"
                 >

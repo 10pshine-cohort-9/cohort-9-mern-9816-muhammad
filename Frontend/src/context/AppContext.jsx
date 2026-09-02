@@ -23,7 +23,7 @@ const AppContextProvider = (props) => {
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
-    showSuccess("You are Loggerd Out successfully")
+    showSuccess("You are Logged Out successfully")
   };
 
   useEffect( () => {
@@ -47,7 +47,6 @@ const AppContextProvider = (props) => {
 
       if (!controller.signal.aborted) {
         console.log("Prfile got");
-        console.log(response.data.profile)
         setuserProfile(response.data.profile);
         
       }
