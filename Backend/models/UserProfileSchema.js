@@ -10,7 +10,7 @@ const ProfileSchema = new mongoose.Schema({
     Image: {
         url:{
         type: String,
-        default: "https://res.cloudinary.com/sinwqkak/image/upload/v1786729161/party_pic_frbs9t.jpg"
+        default: "https://res.cloudinary.com/sinwqkak/image/upload/v1787989812/blank-profile-picture-973460_960_720_mkmzwe.webp"
         },           
         fileName: String,
         public_id: {

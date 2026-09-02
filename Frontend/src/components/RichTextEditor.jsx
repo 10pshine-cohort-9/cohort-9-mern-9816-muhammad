@@ -28,14 +28,14 @@ const RichTextEditor = ({ value, onChange }) => {
     onUpdate: ({editor}) => { onChange(editor.getHTML()) }
  })
 
- useEffect( ()=> {
-    if (!editor) 
-        return
-    const currentContent = editor.getHTML()
-    if (value !== currentContent) {
-        editor.commands.setContent(value || "")
-    } 
- },[value, editor])
+//  useEffect( ()=> {
+//     if (!editor) 
+//         return
+//     const currentContent = editor.getHTML()
+//     if (value !== currentContent) {
+//         editor.commands.setContent(value || "")
+//     } 
+//  },[value, editor])
 
  if (!editor) {
     return null

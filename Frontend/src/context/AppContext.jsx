@@ -3,6 +3,7 @@ import { dummyNotes } from "../assets/assets";
 import { createContext } from "react";
 import { RouterContextProvider } from "react-router-dom";
 import axios from "axios";
+import { showSuccess } from "../utils/reactToastify";
 
 export const AppContext = createContext();
 const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
@@ -22,6 +23,7 @@ const AppContextProvider = (props) => {
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
+    showSuccess("You are Loggerd Out successfully")
   };
 
   useEffect( () => {
@@ -45,6 +47,7 @@ const AppContextProvider = (props) => {
 
       if (!controller.signal.aborted) {
         console.log("Prfile got");
+        console.log(response.data.profile)
         setuserProfile(response.data.profile);
         
       }

@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext.jsx";
 import RichTextEditor from "../components/RichTextEditor.jsx";
 import NoteImportExport from "../components/NoteImportExport.jsx";
+import { showError, showSuccess, showWarning } from "../utils/reactToastify.js";
 
 const CreateNote = () => {
-  const { BACKEND_URL } = useContext(AppContext);
+  const { BACKEND_URL, token } = useContext(AppContext);
 
+  const navigate = useNavigate();
+  
   const [Category, setCategory] = useState("");
   const [Title, setTitle] = useState("");
   const [dateOfCreation, setDateofCreation] = useState("");
@@ -15,22 +19,67 @@ const CreateNote = () => {
 
   const submitNote = async (event) => {
     // it will prevent the default submission
-    event.preventDefault();
-    
-    try {
+    event.preventDefault(); 
+
+      if (!Category.trim()) {
+         showWarning("Please enter a Note Category")
+         return;
+      }
+      if (!Category.length >= 5) {
+        showWarning("Note Category should be of atleast 5 characters")
+         return;
+      }
+      if (!Title.trim()) {
+         showWarning("Please enter a Note Title")
+         return;
+      }
+      if (!Title.length >= 5) {
+        showWarning("Note Title should be of atleast 5 characters")
+         return;
+      }
+      if (!dateOfCreation) {
+        showWarning("Please select the Date")
+         return;
+      }
+      
+      const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+      if (!plainContent) {
+         showWarning("Please enter the Note Content")
+         return;
+      }
+      if (!plainContent.length >= 20) {
+        showWarning("Note Content should be of atleast 20 characters")
+         return;
+      } 
+  try {
       const response = await axios.post(BACKEND_URL + "/new-note", {
         Category,
         Title,
         dateOfCreation,
         Content,
-      });
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+      if (response.data) {
+        showSuccess("Note Created Successfully")
+        navigate('/all-notes')
+      } else {
+        showError(response?.data?.message || "Note Creation has Failed")
+      }
 
       // It will clear the input fields after form submission
       setCategory("");
       setTitle("");
       setDateofCreation("");
       setContent("");
+      
     } catch (error) {
+      showError(error.response?.data?.message || "Note Creation Failed")
       console.log(error);
     }
   };
@@ -111,15 +160,6 @@ const CreateNote = () => {
                 Add Content:
               </label>
               <RichTextEditor value={Content} onChange={setContent} />
-              {/* <textarea
-                id="content"
-                rows={5}
-                cols={30}
-                value={Content}
-                placeholder="start typing"
-                onChange={(event) => setContent(event.target.value)}
-                className="w-full resize-none rounded-lg border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/30"
-              ></textarea> */}
             </div>
             <NoteImportExport title={Title} content={Content} onImport={(importedNote) => {
 

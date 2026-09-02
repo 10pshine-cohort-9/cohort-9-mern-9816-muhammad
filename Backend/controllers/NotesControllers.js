@@ -2,9 +2,61 @@ import Note from "../models/UserNotesSchema.js"
 import logger from "../logger/logger.js";
 
 const CreateNote = async (req, res) => {
+
     try {
     const { Category, Title, dateOfCreation, Content } = req.body;
-    const newNote = {Category, Title, dateOfCreation, Content}
+
+            if (!Category.trim()) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Category is required"
+                })
+            }
+
+            if (!Category.length >= 5) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Note Category should be of atleast 5 characters"
+                }) 
+            }
+
+            if (!Title.trim()) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Title is required"
+                })
+            }
+
+            if (!Title.length >= 5) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Note Title should be of atleast 5 characters"
+               }) 
+            }
+
+            if (!dateOfCreation) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Select Date"
+               })
+            }
+
+            const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+            if (!plainContent) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Content is required"
+               })
+            }    
+            if (!plainContent.length >= 20) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Note Content should be of atleast 20 characters"
+               }) 
+            }
+
+    const UserId = req.UserId
+    const newNote = {UserId, Category, Title, dateOfCreation, Content}
     const AddNote = new Note(newNote)
     await AddNote.save();
     logger.info("New Note Created Successfully")
@@ -17,7 +69,7 @@ const CreateNote = async (req, res) => {
 
 const GetAllNotes = async (req, res) => {
     try {
-    const notes =  await Note.find();
+    const notes =  await Note.find({UserId: req.UserId});
     res.json(notes);
     logger.info("All notes are here")     
     } catch (error) {
@@ -31,7 +83,7 @@ const GetAllNotes = async (req, res) => {
 const findNote = async (req, res) => {
     const { id } = req.params;
     try {
-        const findedNote = await Note.findById(id);
+        const findedNote = await Note.findOne({_id: id, UserId: req.UserId});
         if (!findedNote) {
             res.sendStatus(404);
         }
@@ -50,8 +102,44 @@ const editNote = async (req, res) => {
     const { id } = req.params;
     const { Title, dateOfCreation, Content } = req.body;
 
+            if (!Title.trim()) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Title is required"
+                })
+            }
+
+            if (!Title.length >= 5) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Note Title should be of atleast 5 characters"
+               }) 
+            }
+
+            if (!dateOfCreation) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Select Date"
+               })
+            }
+
+            //const plainContent = getPlainText(Content).trim()
+            const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+            if (!plainContent) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Content is required"
+               })
+            }    
+            if (!plainContent.length >= 20) {
+            return res.status(400).json({
+                   success: false,
+                   message: "Note Content should be of atleast 20 characters"
+               }) 
+            }
+             
     try {
-         const editedNote = await Note.findByIdAndUpdate(id, { Title: Title, dateOfCreation: dateOfCreation, Content: Content}, {returnDocument: 'after', runValidators: true});
+         const editedNote = await Note.findOneAndUpdate({_id: id, UserId: req.UserId}, { Title: Title, dateOfCreation: dateOfCreation, Content: Content}, {returnDocument: 'after', runValidators: true});
         if (!editedNote) {
             res.status(404).send("Edited note not found or invalid ID")
         } else {
@@ -68,7 +156,7 @@ const deleteNote = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const deletedNote = await Note.findByIdAndDelete(id);
+        const deletedNote = await Note.findOneAndDelete({_id: id, UserId: req.UserId});
         if(!deletedNote){
             res.status(404).send("Note not found")
         }

@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useEffect } from "react";
+import { showError, showSuccess, showWarning } from "../utils/reactToastify";
 
 const UserProfile = () => {
   const {BACKEND_URL, token, userProfile, setuserProfile} = useContext(AppContext)
@@ -22,6 +23,7 @@ const UserProfile = () => {
   const [Image, setImage] = useState(null)
   const [imageView, setimageView] = useState(null)
   console.log("Selected image:", Image);
+
   const [isEdit, setisEdit] = useState(false);
 
   const editedProfile = async () => {
@@ -47,21 +49,37 @@ const UserProfile = () => {
       if(response.data.success){
         setuserData(response.data.profile)
         setuserProfile(response.data.profile)
+        showSuccess("Profile Updated Successfully")
       }
       
     } catch (error) {
+      showError(error.response?.data?.message || "Profile edit Failed")
       console.log(error)
     }
     
+  }
+  
+  const imageChangeHandling = (event) => {
+      const file = event.target.files[0]
+
+      if (!file.type.startsWith('image/')) {
+        showWarning("Please select a valid image")
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+      showWarning("Image must be smaller than 5MB")
+      }
+      setImage(file)
   }
 useEffect( ()=> {
   if (!Image) {
     setimageView(null);
     return
   }
+  
   const imageUrl = URL.createObjectURL(Image)
   setimageView(imageUrl)
-
+  
   return ()=> {
     URL.revokeObjectURL(imageUrl)
   }
@@ -109,7 +127,7 @@ useEffect(() => {
                   <assets.ImageUp className="h-6 w-6 text-white" aria-hidden='true' />
                   <span className="sr-only">Choose Profile Image</span>
                 </label>
-                <input type="file" id="profileImage" accept="image/*" className="sr-only" onChange={(event) => setImage(event.target.files[0])} />
+                <input type="file" id="profileImage" accept="image/*" className="sr-only" onChange={imageChangeHandling} />
               </div>
             )}
 
@@ -136,11 +154,12 @@ useEffect(() => {
             <button
               onClick={async () => {
                 if (isEdit === true) {
-                  await editedProfile();
+                  await editedProfile(); 
                   setisEdit(false)
+                } else{
+                  setisEdit(true)
                 }
-                else{
-                  setisEdit(true)}}
+                }
                 }
               className="w-full sm:w-auto shrink-0 rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
             >
