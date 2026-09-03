@@ -6,9 +6,41 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 const signUp = async (req, res) => {
+    const emailRegExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const passwordRegExpression = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
     const saltRounds = 10;
     try {
         const { UserName, Email, Password }  = req.body;
+         if (!UserName || !UserName.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "UserName is required"
+                })
+              }
+              if (typeof Email !== "string" ||  !Email.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Email is required"
+                })
+              }
+              if (!emailRegExpression.test(Email)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Please enter a valid Email"
+                })
+              }
+              if (!Password) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Enter password"
+                })
+              }
+              if (!passwordRegExpression.test(Password)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Password must be at least 8 characters and contain uppercase, lowercase and a number"
+                })
+              }
         const encryptedPassword = await bcrypt.hash(Password, saltRounds)
     const user = new NotesAppUsers({ UserName, Email, encryptedPassword });
     await user.save();
@@ -24,7 +56,7 @@ const signUp = async (req, res) => {
     logger.info("Profile of newly registered user created successfully")
 
     } catch (error) {
-        res.status(409).send("Add a unique email! This email already exists")
+        res.status(409).json({'success': false, 'message': "Add a unique email! This email already exists"})
         logger.error(error)
     }
     
@@ -33,6 +65,19 @@ const signUp = async (req, res) => {
 const Login = async (req, res) => {
     try {
         const {Email, Password}= req.body
+
+        if (typeof Email !== "string" || !Email.trim()) {
+            return res.status(400).json({
+            success: false,
+            message: "Email is required"
+            })
+        }        
+        if (!Password) {
+            return res.status(400).json({
+            success: false,
+            message: "Enter password"
+            })
+        }
         
         const filteredUser = await NotesAppUsers.findOne({Email})
         if (!filteredUser) {

@@ -15,12 +15,16 @@ const AllNotes = () => {
     "Others",
   ];
   const navigate = useNavigate();
-  const { BACKEND_URL } = useContext(AppContext);
+  const { BACKEND_URL, token } = useContext(AppContext);
   const [Notes, setNotes] = useState([]);
 
   const getAllNotes = async () => {
     try {
-      const note = await axios.get(BACKEND_URL + "/all-notes");
+      const note = await axios.get(BACKEND_URL + "/all-notes", {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      });
       setNotes(note.data);
     } catch (error) {
       console.log(error);

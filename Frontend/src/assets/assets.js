@@ -1,6 +1,6 @@
 import
 {NotebookText, Search, Tags, Cone, ArrowRight, Menu, X,
-PenLine, BookMarked, Trash2, Eye, ChevronDown, ImageUp, FileDown, FileUp} from 'lucide-react' 
+PenLine, BookMarked, Trash2, Eye, EyeOff, ChevronDown, ImageUp, FileDown, FileUp} from 'lucide-react' 
 export const CardFeatures = [
     {
         'id' : "Card 1",
@@ -33,7 +33,7 @@ import bannerimage from './bannerimage.jpg'
 export const assets = {
     notePadpicture,
     bannerimage,
-    Eye,
+    Eye, EyeOff,
     ChevronDown,
     ImageUp,
     FileDown, 

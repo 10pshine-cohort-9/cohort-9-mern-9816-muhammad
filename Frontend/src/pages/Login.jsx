@@ -4,22 +4,39 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
+import { assets } from '../assets/assets'
+import { showError, showSuccess, showWarning } from '../utils/reactToastify'
 const Login = () => {
 
     const {login} = useContext(AppContext)
     const {BACKEND_URL} = useContext(AppContext)
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
+    const [showPassword, setshowPassword] = useState(false)
     const navigate = useNavigate()
+
+    const passwordRegExpression = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
 
     const checkLogin = async (event) => {
         event.preventDefault();
         try {
+          if (!Email.trim()) {
+            showWarning('Email is required')
+            return;
+          }
+          if (!Password) {
+            showWarning("Enter password")
+            return;
+          }
+          // if (!passwordRegExpression.test(Password)) {
+          //   showWarning("Password must be at least 8 characters and contain uppercase, lowercase and a number")
+          //   return;
+          // }
           const response = await axios.post(BACKEND_URL + '/user/login', {Email, Password})
-          console.log(response);
 
           if (response.data.success) {
             login(response.data.token);
+            showSuccess("Login Successful")
             
             setEmail('');
             setPassword('');
@@ -27,6 +44,7 @@ const Login = () => {
           }
           
         } catch (error) {
+          showError(error.response?.data?.message || "Login Failed")
           console.log(error);
           
         }
@@ -34,7 +52,7 @@ const Login = () => {
     }
   return (
     <section className='flex min-h-[calc(100vh-160px)] items-center justify-center bg-gradient-to-b from-stone-50/70 to-white px-4 py-10 sm:px-6'>
-      <form onSubmit={(event) => checkLogin(event)}
+      <form autoComplete='off' onSubmit={(event) => checkLogin(event)}
       className='w-full max-w-md rounded-3xl border border-stone-500 bg-stone-100 p-6 shadow-xl shadow-stone-100/50 sm:p-8'>
        <div className='text-center'>
           <span className='inline-flex rounded-full bg-stone-50 px-4 py-2 text-sm font-semibold text-emerald-800'>NOTESBOOK Login</span>
@@ -50,7 +68,7 @@ const Login = () => {
        <div>
         <label htmlFor="mail" className='mb-2 block text-sm font-semibold text-emerald-800'>
           Email Address</label>
-        <input type="email" id="mail" placeholder='you@example.com'
+        <input type="email" id="mail" autoComplete='off' name='email' placeholder='you@example.com'
         required value={Email} onChange={(event) => setEmail(event.target.value)}
         className='w-full rounded-xl border border-stone-200 bg-stone-50/40 px-4 py-3 text-sm text-emerald-950 outline-none transition placeholder:text-emerald-500 focus:border-stone-500 focus:bg-white focus:ring-4 focus:ring-stone-200' />
       </div> 
@@ -59,9 +77,16 @@ const Login = () => {
         <div>
           <label htmlFor="Password" className='mb-2 block text-sm font-semibold text-emerald-800'>
             Password</label>
-          <input type="password" id="Password" placeholder='Enter your password'
+           <div className='relative'>
+          <input type={showPassword ? "text" : "password"} id="Password" autoComplete='current-password' name='password' placeholder='Enter your password'
           required value={Password} onChange={(event) => setPassword(event.target.value)}
           className='w-full rounded-xl border border-stone-200 bg-stone-50/40 px-4 py-3 text-sm text-emerald-950 outline-none transition placeholder:text-emerald-500 focus:border-stone-500 focus:bg-white focus:ring-4 focus:ring-stone-200' />
+          
+          <button type='button' onClick={ () => setshowPassword((prev) => !prev)} 
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-emerald-700" aria-label={showPassword ? "Hide password" : "Show password"}>
+            {showPassword ? <assets.EyeOff size={20}/> : <assets.Eye size={20}/>}
+          </button>
+          </div> 
         </div>
        </div>
 
