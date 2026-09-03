@@ -25,7 +25,7 @@ const CreateNote = () => {
          showWarning("Please enter a Note Category")
          return;
       }
-      if (!Category.length >= 5) {
+      if (Category.length < 5) {
         showWarning("Note Category should be of atleast 5 characters")
          return;
       }
@@ -33,7 +33,7 @@ const CreateNote = () => {
          showWarning("Please enter a Note Title")
          return;
       }
-      if (!Title.length >= 5) {
+      if (Title.length < 5) {
         showWarning("Note Title should be of atleast 5 characters")
          return;
       }
@@ -47,7 +47,7 @@ const CreateNote = () => {
          showWarning("Please enter the Note Content")
          return;
       }
-      if (!plainContent.length >= 20) {
+      if (plainContent.length < 20) {
         showWarning("Note Content should be of atleast 20 characters")
          return;
       } 

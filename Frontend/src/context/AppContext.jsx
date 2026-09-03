@@ -4,9 +4,9 @@ import { createContext } from "react";
 import { RouterContextProvider } from "react-router-dom";
 import axios from "axios";
 import { showSuccess } from "../utils/reactToastify";
-
+import { BACKEND_URL } from "../config";
 export const AppContext = createContext();
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL;
+
 if (!BACKEND_URL) {
   throw new Error("Api_baseUrl is not configured correctly");
 }
@@ -47,6 +47,7 @@ const AppContextProvider = (props) => {
 
       if (!controller.signal.aborted) {
         console.log("Prfile got");
+        console.log(response.data.profile)
         setuserProfile(response.data.profile);
         
       }

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import RichTextEditor from "../components/RichTextEditor";
 import axios from "axios";
 import { showError, showSuccess, showWarning } from "../utils/reactToastify";
-import { deleteNote } from "../../../Backend/controllers/NotesControllers";
 
 const NoteView = () => {
   const { id } = useParams();
@@ -44,7 +43,7 @@ const NoteView = () => {
         return;
       }
     
-      if (!noteData.Title.length >= 5) {
+      if (noteData.Title.length < 5) {
         showWarning("Note Title should be of atleast 5 characters")
         return;
       }
@@ -55,7 +54,7 @@ const NoteView = () => {
         return;
       }
 
-      if (!plainContent.length >= 20) {
+      if (plainContent.length < 20) {
         showWarning("Note Content should be of atleast 20 characters")
         return;
       }
@@ -79,7 +78,7 @@ const NoteView = () => {
   const deleteNote = async () => {
     if (Delete === true) {
       try {
-        await axios.delete(BACKEND_URL + `/delete-note/${id}`, {
+       await axios.delete(BACKEND_URL + `/delete-note/${id}`, {
           headers:{
           Authorization: `Bearer ${token}`
         }
@@ -157,7 +156,12 @@ const NoteView = () => {
 
           <div className="mt-4">
             {isEdit ? (
-              <RichTextEditor value={noteData.Content || ""} onChange={(Content) => setnoteData( (prev) => ({ ...prev, Content }))} />
+              <RichTextEditor value={noteData.Content} onChange={(content) => 
+                setnoteData((prev) => ({
+                  ...prev,
+                  Content: content
+                }))
+               } />
             ) : (
               <div className ="text-sm sm:text-base leading-relaxed text-stone-600 [&_h1]:mt-2 [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-emerald-900
                   [&_h2]:mt-2 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-emerald-900 [&_p]:my-2 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5
@@ -169,13 +173,7 @@ const NoteView = () => {
           <div className="mt-6 flex flex-col-reverse gap-3 border-t border-stone-200 pt-5 sm:flex-row sm:justify-end">
             {isEdit ? (
               <button
-                onClick={async () => { 
-                  const success = await editNote();
-                  if (success) {
-                    setisEdit(false)
-                  }
-                //  await editNote(), setisEdit(false)
-                }}
+                onClick={async () => {await editNote(), setisEdit(false)}}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
               >
                 Save
@@ -189,15 +187,8 @@ const NoteView = () => {
                   Edit
                 </button>
                 <button
-                  onClick={async () => {
-                    const success = await deleteNote()
-                    if (success) {
-                      setDelete(true);
-                      navigate("/all-notes");
-                    }
-                    // (
-
-                    //   deleteNote(), setDelete(true), navigate("/all-notes"));
+                  onClick={() => {
+                    (deleteNote(), setDelete(true), navigate("/all-notes"));
                   }}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 px-6 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100"
                 >
