@@ -23,10 +23,10 @@ jest.mock("../context/AppContext", () => {
 jest.mock("../assets/assets", () => ({
     assets: {
         Eye: () => {
-            <span data-testid = 'eye-icon'>Eye</span>
+            return <span data-testid = 'eye-icon'>Eye</span>
         },
         EyeOff: () => {
-            <span data-testid = 'eye-off-icon'>EyeOff</span>
+            return <span data-testid = 'eye-off-icon'>EyeOff</span>
         }
     }
 }))

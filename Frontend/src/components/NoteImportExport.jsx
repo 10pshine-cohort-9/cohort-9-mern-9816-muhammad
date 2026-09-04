@@ -46,7 +46,7 @@ const NoteImportExport = ({title, content, onImport}) => {
     const file = event.target.files[0]
     
     if (!file) {
-    showError("Please select a file to import")
+    showWarning("Please select a file to import")
     return
 }
 
