@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import RichTextEditor from "../components/RichTextEditor";
 import axios from "axios";
 import { showError, showSuccess, showWarning } from "../utils/reactToastify";
+import DOMPurify from 'dompurify';
 
 const NoteView = () => {
   const { id } = useParams();
@@ -15,10 +16,14 @@ const NoteView = () => {
   const [isEdit, setisEdit] = useState(false);
   const [Delete, setDelete] = useState(false);
 
+  const isValidObjectId = (value) => /^[a-f\d]{24}$/i.test(value)
+
   const getPlainText = (html) => {
-    const temp = document.createElement("div");
-    temp.innerHTML = html;
-    return temp.textContent || temp.innerText || "";
+    // const temp = document.createElement("div");
+    // temp.innerHTML = html;
+    // return temp.textContent || temp.innerText || "";
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || doc.body.innerText || "";
 };
 
   const getNote = async () => {
@@ -60,8 +65,11 @@ const NoteView = () => {
       }
        
       try {
-      
-      const response = await axios.put(BACKEND_URL + `/edit-note/${id}`, noteData,{
+      if (!isValidObjectId(id)) {
+      showError("Invalid note reference");
+      return;
+    }
+      const response = await axios.put(BACKEND_URL + `/edit-note/${encodeURIComponent(id)}`, noteData,{
         headers:{
           Authorization: `Bearer ${token}`
         }
@@ -166,14 +174,17 @@ const NoteView = () => {
               <div className ="text-sm sm:text-base leading-relaxed text-stone-600 [&_h1]:mt-2 [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-emerald-900
                   [&_h2]:mt-2 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-emerald-900 [&_p]:my-2 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5
                   [&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-emerald-700 [&_a]:underline [&_strong]:font-semibold "
-                dangerouslySetInnerHTML={{ __html: noteData.Content }} />
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(noteData.Content) }} />
             )}
           </div>
 
           <div className="mt-6 flex flex-col-reverse gap-3 border-t border-stone-200 pt-5 sm:flex-row sm:justify-end">
             {isEdit ? (
               <button
-                onClick={async () => {await editNote(), setisEdit(false)}}
+                onClick={async () => {
+                  await editNote(),
+                  setisEdit(false)
+                }}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg active:translate-y-0.5"
               >
                 Save
@@ -188,7 +199,11 @@ const NoteView = () => {
                 </button>
                 <button
                   onClick={() => {
-                    (deleteNote(), setDelete(true), navigate("/all-notes"));
+                    (
+                    deleteNote(),
+                    setDelete(true),
+                    navigate("/all-notes")
+                    );
                   }}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 px-6 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100"
                 >

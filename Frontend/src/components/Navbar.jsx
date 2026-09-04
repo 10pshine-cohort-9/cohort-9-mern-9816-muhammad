@@ -67,7 +67,13 @@ return (
 {mobileMenu && (
   <div className='fixed inset-0 z-50 md:hidden'>
     <div className='absolute inset-0 bg-stone-900/40'
-    onClick={()=> setmobileMenu(false)}/>
+      onClick={()=> setmobileMenu(false)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+        setmobileMenu(false);
+        }
+      }}
+        role="button" tabIndex={0} aria-label="Close menu" />
 
     <div className='absolute right-0 top-0 flex h-full w-full max-w-xs flex-col bg-white shadow-xl'>
       <div className='flex h-14 items-center justify-between border-b border-stone-200 px-6'>

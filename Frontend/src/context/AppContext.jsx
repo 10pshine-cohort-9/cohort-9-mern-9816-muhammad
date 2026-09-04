@@ -16,6 +16,11 @@ const AppContextProvider = (props) => {
   const [userProfile, setuserProfile] = useState(null);
     
   const login = (newToken) => {
+    const isValidJWT = typeof newToken === "string" && newToken.split(".").length === 3;
+  if (!isValidJWT) {
+    console.error("Invalid token received");
+    return;
+  }
     localStorage.setItem("token", newToken);
     setToken(newToken);
   };
@@ -47,7 +52,6 @@ const AppContextProvider = (props) => {
 
       if (!controller.signal.aborted) {
         console.log("Prfile got");
-        console.log(response.data.profile)
         setuserProfile(response.data.profile);
         
       }
