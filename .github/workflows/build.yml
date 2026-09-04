@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - develop
-  pull_request:
-    types: [opened, synchronize, reopened]
+      - feat-sonarqube
 
 jobs:
   sonarqube:
     name: SonarQube
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: windows-latest
 
     steps:
