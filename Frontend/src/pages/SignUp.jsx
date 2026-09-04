@@ -5,6 +5,7 @@ import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios'
 import { showError, showSuccess, showWarning } from '../utils/reactToastify';
+import validator from 'validator'
 
 const SignUp = () => {
   const {BACKEND_URL} = useContext(AppContext)
@@ -15,7 +16,7 @@ const SignUp = () => {
   const [showPassword, setshowPassword] = useState(false)
   const navigate = useNavigate();
 
-  const emailRegExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  //const emailRegExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   const passwordRegExpression = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
   const registerUser = async (event) => {
     event.preventDefault();
@@ -27,7 +28,7 @@ const SignUp = () => {
         showWarning('Email is required')
         return;
       }
-      if (!emailRegExpression.test(Email)) {
+      if (!validator.isEmail(Email)) {
         showWarning("Please enter a valid Email")
         return;
       }

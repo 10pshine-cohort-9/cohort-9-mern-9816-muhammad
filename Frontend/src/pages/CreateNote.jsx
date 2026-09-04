@@ -42,7 +42,12 @@ const CreateNote = () => {
          return;
       }
       
-      const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+      const getPlainText = (html) => {
+        const doc = new DOMParser().parseFromString(html || "", "text/html");
+        return doc.body.textContent || doc.body.innerText || "";
+      };
+      //const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+      const plainContent = getPlainText(Content).trim()
       if (!plainContent) {
          showWarning("Please enter the Note Content")
          return;

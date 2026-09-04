@@ -1,5 +1,7 @@
 import Note from "../models/UserNotesSchema.js"
 import logger from "../logger/logger.js";
+import sanitizeHtml from 'sanitize-html';
+import DOMPurify from 'dompurify';
 
 const CreateNote = async (req, res) => {
 
@@ -41,7 +43,8 @@ const CreateNote = async (req, res) => {
                })
             }
 
-            const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+            //const plainContent =  Content?.replace(/<[^>]*>/g, "").trim() || "";
+            const plainContent = sanitizeHtml(Content || "", { allowedTags: [], allowedAttributes: {} }).trim();
             if (!plainContent) {
             return res.status(400).json({
                    success: false,
@@ -54,7 +57,7 @@ const CreateNote = async (req, res) => {
                    message: "Note Content should be of atleast 20 characters"
                }) 
             }
-    const sanitizedContent = sanitize(Content);
+    const sanitizedContent = DOMPurify.sanitize(Content);
     const UserId = req.UserId
     const newNote = {UserId, Category, Title, dateOfCreation, Content: sanitizedContent}
     const AddNote = new Note(newNote)
@@ -109,7 +112,7 @@ const editNote = async (req, res) => {
                 })
             }
 
-            if (!Title.length >= 5) {
+            if (Title.length < 5) {
             return res.status(400).json({
                    success: false,
                    message: "Note Title should be of atleast 5 characters"
@@ -131,7 +134,7 @@ const editNote = async (req, res) => {
                    message: "Content is required"
                })
             }    
-            if (!plainContent.length >= 20) {
+            if (plainContent.length < 20) {
             return res.status(400).json({
                    success: false,
                    message: "Note Content should be of atleast 20 characters"
@@ -144,7 +147,7 @@ const editNote = async (req, res) => {
         if (!editedNote) {
             res.status(404).send("Edited note not found or invalid ID")
         } else {
-            logger.info(`The Note with id ${id} edited successfully`)
+            logger.info(`The Selected Note edited successfully`)
             res.send(editedNote)
         }
     } catch (error) {
@@ -162,7 +165,7 @@ const deleteNote = async (req, res) => {
             res.status(404).send("Note not found")
         }
         else{
-            logger.info(`Note with this ID ${id} deleted successfully`);
+            logger.info(`The Selected Note deleted successfully`);
             res.json(deletedNote);
 
         }
