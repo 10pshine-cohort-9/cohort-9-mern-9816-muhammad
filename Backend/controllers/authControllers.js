@@ -4,9 +4,10 @@ import UserProfile from "../models/UserProfileSchema.js";
 import logger from '../logger/logger.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import validator from 'validator';
 
 const signUp = async (req, res) => {
-    const emailRegExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    //const emailRegExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const passwordRegExpression = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
     const saltRounds = 10;
     try {
@@ -23,7 +24,7 @@ const signUp = async (req, res) => {
                     message: "Email is required"
                 })
               }
-              if (!emailRegExpression.test(Email)) {
+              if (!validator.isEmail(Email)) {
                 return res.status(400).json({
                     success: false,
                     message: "Please enter a valid Email"
@@ -78,8 +79,8 @@ const Login = async (req, res) => {
             message: "Enter password"
             })
         }
-        
-        const filteredUser = await NotesAppUsers.findOne({Email})
+        const safeEmail = String(Email).trim();
+        const filteredUser = await NotesAppUsers.findOne({Email: safeEmail})
         if (!filteredUser) {
             return res.status(401).json({'success': false, 'message': "No account found with this email"})
         }

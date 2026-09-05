@@ -46,14 +46,18 @@ const NoteImportExport = ({title, content, onImport}) => {
     const file = event.target.files[0]
     
     if (!file) {
-        showError("Please select a file to import")
-        return
-    }
-    if (file.type !== "application/json" || !file.name.toLowerCase().endsWith(".json")) {
-        alert("Please select a json file")
-        event.target.value = ""
-        return
-    }
+    showWarning("Please select a file to import")
+    return
+}
+
+if (
+    file.type !== "application/json" ||
+    !file.name.toLowerCase().endsWith(".json")
+) {
+    showWarning("Please select a json file")
+    event.target.value = ""
+    return
+}
     
     const fileReader = new FileReader()
     

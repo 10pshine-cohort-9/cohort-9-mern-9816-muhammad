@@ -25,6 +25,8 @@ const serverStarter = async () => {
 };
 
 const app = express()
+app.disable("x-powered-by")
+
 const port = process.env.PORT;
 app.use(express.json())
 app.use(cors({
